@@ -1,0 +1,19 @@
+/* BJJ theme: blue tatami with seams, gi-weave cards with stitching, 🥋 callouts. */
+
+body[data-theme="bjj"] .mat-bg {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -5%, rgba(255, 244, 214, 0.18), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 120%, rgba(0, 0, 0, 0.55), transparent 60%),
+    repeating-linear-gradient(90deg, transparent 0 199px, var(--seam) 199px 201px),
+    repeating-linear-gradient(0deg, transparent 0 199px, var(--seam) 199px 201px),
+    linear-gradient(180deg, var(--mat) 0%, var(--mat-2) 100%);
+}
+
+body[data-theme="bjj"] .surface {
+  background-image:
+    repeating-linear-gradient(45deg, rgba(60, 50, 30, 0.045) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(-45deg, rgba(60, 50, 30, 0.045) 0 1px, transparent 1px 4px);
+}
+body[data-theme="bjj"] .surface::after { border: 1.5px dashed rgba(60, 50, 30, 0.22); }
+
+body[data-theme="bjj"] .callout-coach .callout-title::before { content: "🥋 "; }

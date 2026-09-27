@@ -1,0 +1,57 @@
+/* Fencing theme: a steel piste under hall lights, fencing whites, scoring-box lamps. */
+
+body[data-theme="fencing"] {
+  --night: #0c0e12;
+  --mat: #2b3240;
+  --mat-2: #151920;
+  --you: #e0283f;
+  --them: #1fbf55;
+  --paper: #f7f7f4;
+  --gold: #e6c35a;
+  --muted-on-dark: #a9b0bd;
+}
+body[data-theme="fencing"] .mat-bg {
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -8%, rgba(235, 244, 255, 0.22), transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 120%, rgba(0, 0, 0, 0.7), transparent 60%),
+    linear-gradient(180deg, #1c212b, #0b0d11);
+}
+/* The piste: a metallic strip with the centre, en-garde and warning lines. */
+body[data-theme="fencing"] .mat-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: min(640px, 92vw);
+  transform: translateX(-50%);
+  opacity: 0.2;
+  background:
+    linear-gradient(180deg, transparent 49.7%, #fff 49.7% 50.3%, transparent 50.3%),
+    linear-gradient(180deg, transparent 33%, rgba(255, 255, 255, 0.8) 33% 33.4%, transparent 33.4% 66.6%, rgba(255, 255, 255, 0.8) 66.6% 67%, transparent 67%),
+    linear-gradient(180deg, transparent 0 96%, rgba(255, 255, 255, 0.5) 96% 96.4%, transparent 96.4%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 5px),
+    linear-gradient(90deg, #5d6573, #b9c1cc 18%, #8b939f 50%, #c3cad3 82%, #5d6573);
+  box-shadow: 0 0 60px rgba(160, 190, 230, 0.25);
+}
+body[data-theme="fencing"] .surface {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(225, 228, 232, 0.6));
+}
+body[data-theme="fencing"] .callout-coach .callout-title::before { content: "🤺 "; }
+body[data-theme="fencing"] .scoreboard { border-bottom-color: #3a4250; }
+body[data-theme="fencing"] .sb-lamp {
+  display: block;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #2a0a0e;
+  border: 2px solid #000;
+}
+body[data-theme="fencing"] .sb-them .sb-lamp { background: #08240f; }
+body[data-theme="fencing"] .sb-lamp.lit { background: var(--you); box-shadow: 0 0 14px 4px rgba(224, 40, 63, 0.8); animation: lamp 1.2s ease-out 1; }
+body[data-theme="fencing"] .sb-them .sb-lamp.lit { background: var(--them); box-shadow: 0 0 14px 4px rgba(31, 191, 85, 0.8); }
+@keyframes lamp { 0% { filter: brightness(2.2); } 100% { filter: brightness(1); } }
+body[data-theme="fencing"] .choice { border-left-color: #8b939f; }
+body[data-theme="fencing"] .choice:hover { border-left-color: var(--you); }
+body[data-theme="fencing"] .notebook h3 { color: #1d2a44; }

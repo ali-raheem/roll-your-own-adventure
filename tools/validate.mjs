@@ -7,9 +7,8 @@
 
 import { readFile } from 'node:fs/promises';
 import { join, resolve, basename } from 'node:path';
-import {
-  buildPack, lintPack, parseFrontmatter, endingsOf, applyTarget, applyScoreEffect, decide, emptyScore, choiceVisible,
-} from '../js/parser.js';
+import { buildPack, lintPack, parseFrontmatter, endingsOf } from '../js/parser.js';
+import { enterSection, startMatch, visibleChoices } from '../js/engine.js';
 
 const root = resolve(import.meta.dirname, '..');
 
@@ -40,38 +39,30 @@ function shortestWin(pack, m) {
 }
 
 /**
- * First-to-N packs: play every path through a match with the real scoring rules
- * and report how many win. `known` is the codeword set the player starts with;
- * codewords learned along a path unlock choices later on that same path.
+ * Sports with end rules (first to 15, a winning lead...): play every path
+ * through a match with the real engine and report how many win. `known` is the
+ * codeword set the player starts with; codewords learned along a path unlock
+ * choices later on that same path.
  */
 function simulate(pack, m, known, limit = 200000) {
-  const target = Number(pack.meta.target) || 0;
   const res = { paths: 0, wins: 0, best: null, worst: null, truncated: false };
-  const walk = (id, score, codes, depth) => {
+  const primary = pack.sport.primary;
+  const blank = () => ({ codewords: { ...known }, notes: [], endings: {}, attempts: {}, wins: {}, current: 0, medal: false, run: null });
+  const walk = (prog, depth) => {
     if (res.paths >= limit || depth > 60) { res.truncated = true; return; }
-    const s = pack.sections.get(id);
-    const before = { you: score.you.pts, them: score.them.pts };
-    const sc = structuredClone(score);
-    const cw = { ...codes };
-    for (const fx of s.effects) {
-      if (fx.type === 'learn') { if (fx.key) cw[fx.key] = true; } else applyScoreEffect(sc, fx);
-    }
-    const reached = applyTarget(sc, before, target);
-    let win = null;
-    if (reached === 'you' || reached === 'them') win = reached === 'you';
-    else if (s.ending) win = s.ending.type === 'decision' ? decide(sc).win : s.ending.type === 'win';
-    if (win !== null) {
+    const run = prog.run;
+    if (run.ended) {
       res.paths++;
-      if (win) res.wins++;
-      const line = `${sc.you.pts}-${sc.them.pts}`;
-      const margin = sc.you.pts - sc.them.pts;
+      if (run.ended.win) res.wins++;
+      const margin = run.score.you[primary] - run.score.them[primary];
+      const line = `${run.score.you[primary]}-${run.score.them[primary]}`;
       if (!res.best || margin > res.best.margin) res.best = { margin, line };
       if (!res.worst || margin < res.worst.margin) res.worst = { margin, line };
       return;
     }
-    for (const c of s.choices) if (choiceVisible(c, cw)) walk(c.target, sc, cw, depth + 1);
+    for (const c of visibleChoices(pack, prog)) walk(enterSection(pack, structuredClone(prog), c.target, c.label), depth + 1);
   };
-  walk(m.start, emptyScore(), known, 0);
+  walk(startMatch(pack, blank(), m.index), 0);
   return res;
 }
 
@@ -94,7 +85,7 @@ async function main() {
       console.log(`  ${m.file}: ${m.sections.length} sections, ${count('win')} wins / ${count('lose')} losses / ${count('decision')} decisions, ` +
         `${codes.size} codewords, shortest win ${shortestWin(pack, m) ?? 'none (decision only)'} moves`);
     }
-    if (Number(pack.meta.target) > 0) {
+    if (pack.sport.rules().length) {
       const all = {};
       for (const s of pack.sections.values()) for (const f of s.effects) if (f.type === 'learn' && f.key) all[f.key] = true;
       for (const m of pack.matches) {

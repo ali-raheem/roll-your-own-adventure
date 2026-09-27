@@ -17,19 +17,23 @@ Plain HTML/CSS/ES modules. No build step, no runtime dependencies, no framework.
 ```bash
 python3 -m http.server 8080   # run locally (npm run serve); must be HTTP, not file://
 node tools/validate.mjs       # validate all packs (npm run validate); run after every pack edit
-tools/deploy.sh               # validate, rsync to server, check live URLs
+node --test tools/test.mjs    # engine and sport tests (npm test); run after every engine change
+tools/deploy.sh               # validate, test, rsync to server, check live URLs
 ```
 
 ## Layout
 
 | Path | Role |
 |---|---|
-| `js/parser.js` | Pack format parser, `lintPack`, decision rule, scoring, book numbering. Pure JS, no DOM: shared by the app and `tools/validate.mjs` |
+| `js/parser.js` | Pack format parser, `lintPack`, book numbering. Sport-neutral: score directives become generic effects resolved against the pack's sport |
+| `js/engine.js` | Match engine (start, enter section, end rules, decisions, clock). Pure: used by the app, the validator's path simulation and `tools/test.mjs` |
+| `js/sports/` | One module per sport (`bjj.js`, `fencing.js`), shared rule helpers (`common.js`) and the registry/pack-override merge (`index.js`). See `docs/SPORTS.md` |
+| `css/sports/<theme>.css` | Per-sport look, scoped to `body[data-theme]`, loaded when a pack of that sport opens |
 | `js/markdown.js` | Tiny markdown renderer; escapes all author HTML. `:::kind` callouts |
 | `js/store.js` | Fetch packs, import packs from files, progress in localStorage (all access try/catch guarded) |
 | `js/app.js` | Hash router and screens: `#/`, `#/pack/<id>`, `/match/<n>`, `/play`, `/book` |
 | `js/book.js` | Printable gamebook (numbered paragraphs, scoresheet, codeword instructions) |
-| `css/style.css` | Whole theme incl. print CSS for the book |
+| `css/style.css` | Shared layout and components incl. print CSS for the book; no sport looks |
 | `sw.js` | Service worker: network-first with cache fallback. Bump `CACHE` if you change the precache list |
 | `packs/index.json` | Lists bundled packs; `packs/<id>/pack.md` lists its match files |
 | `docs/WRITING_PACKS.md` | Authoring format reference (keep in sync with parser changes) |
@@ -45,11 +49,15 @@ All asset paths are relative so the app works under any subpath (it is served fr
 - Effects fire on entering a section. Decision = points, then advantages, then fewer penalties; full tie
   goes to the opponent. The clock auto-ticks `clock_tick` seconds per move (default 20, floor 0:10); `@clock` never runs it backwards.
 - Every non-ending section needs at least one ungated choice; the validator enforces this.
-- Sport-specific presentation and rules come from `packConfig()` in `js/parser.js` (pack.md keys:
-  `theme`, `target`, `clock_tick`, `*_label`, stamps, `tie_text`). BJJ values are the defaults, so never
-  hard-code sport terms in `app.js`/`book.js`; add a config key instead. Themes live in `css/style.css`
-  under `body[data-theme="..."]`.
-- `@clock m:ss reset` starts a new period. With `target`, reaching N ends the bout mid-section; the
+- A pack names its sport (`sport: fencing`; BJJ if omitted). Everything sport-specific lives in
+  `js/sports/<id>.js`: counters, end rules, decision criteria, profile fields, UI text, book wording.
+  **Never put sport knowledge in `app.js`, `book.js`, `engine.js`, `parser.js` or `css/style.css`**;
+  add a field to the sport module (and its resolution in `js/sports/index.js`) instead.
+- Pack-level overrides (`target`, `clock_tick`, `*_label`, stamps, `tie_text`, `theme`) are merged by
+  `resolveSport()`; keep them working for existing and imported packs.
+- New rule shapes go in `js/sports/common.js` as reusable end rules (`firstTo`, `leadBy`,
+  `limitLoses`) with tests in `tools/test.mjs`.
+- `@clock m:ss reset` starts a new period. With end rules, reaching N ends the bout mid-section; the
   validator's path simulation reports win rates; keep first runs hard and the final the hardest.
 
 ## Content rules for Point in Line
@@ -76,7 +84,8 @@ All asset paths are relative so the app works under any subpath (it is served fr
 Server: `root@185.163.204.17`, web root `/var/www/shoryuken.me/roll/` (nginx site
 `/etc/nginx/sites-enabled/shoryuken.me`, `location /roll/` block with no-cache headers and explicit MIME
 types including `text/markdown` for `.md`). Deploy with `tools/deploy.sh`; it excludes `tools/`,
-`docs/`, `README.md`, `package.json` and this file.
+`docs/`, `README.md`, `package.json` and this file. New JS/CSS files must be added to `SHELL` in
+`sw.js` (and `CACHE` bumped) so installed copies work offline.
 
 - nginx changes: back up the config to `/root/`, edit, `nginx -t`, then `systemctl reload nginx`.
 - The site homepage `/var/www/shoryuken.me/index.html` links here from its Apps card list

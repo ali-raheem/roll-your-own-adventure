@@ -4,6 +4,7 @@
 
 import { buildPack, parseFrontmatter } from './parser.js';
 
+// Historical prefix from when this was BJJ-only; changing it would orphan saved progress.
 const PREFIX = 'bjjcyoa:';
 const IMPORTED_KEY = PREFIX + 'imported';
 

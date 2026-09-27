@@ -3,7 +3,7 @@
 // instructions for a paper scoresheet. Print it from the browser (or save as PDF).
 
 import { renderMarkdown, escapeHtml as h, inline } from './markdown.js';
-import { bookNumbers, packConfig } from './parser.js';
+import { bookNumbers } from './parser.js';
 
 function roundName(m, i, total) {
   if (m.meta.round) return m.meta.round;
@@ -11,13 +11,17 @@ function roundName(m, i, total) {
   return fromEnd === 1 ? 'Final' : fromEnd === 2 ? 'Semifinal' : fromEnd === 3 ? 'Quarterfinal' : `Round ${i + 1}`;
 }
 
-function effectLine(fx, cfg) {
+function effectLine(fx, sport) {
   const who = fx.who === 'you' ? 'yourself' : 'your opponent';
   const why = fx.label ? ` (${h(fx.label)})` : '';
   switch (fx.type) {
-    case 'points': return `✎ Add <b>${fx.value > 0 ? '+' : ''}${fx.value}</b> to ${who === 'yourself' ? 'your' : 'your opponent’s'} ${h(cfg.points.toLowerCase())}${why}.`;
-    case 'advantage': return `✎ Mark <b>one</b> in ${who === 'yourself' ? 'your' : 'your opponent’s'} ${h((cfg.advantages || 'advantages').toLowerCase())}${why}.`;
-    case 'penalty': return `✎ Mark <b>one</b> in ${who === 'yourself' ? 'your' : 'your opponent’s'} ${h(cfg.penalties.toLowerCase())}${why}.`;
+    case 'score': {
+      const c = sport.counter(fx.counter);
+      const whose = who === 'yourself' ? 'your' : 'your opponent’s';
+      const label = h(c.label.toLowerCase());
+      if (c.id !== sport.primary && fx.value === 1) return `✎ Mark <b>one</b> in ${whose} ${label}${why}.`;
+      return `✎ Add <b>${fx.value > 0 ? '+' : ''}${fx.value}</b> to ${whose} ${label}${why}.`;
+    }
     case 'learn':
       return fx.key
         ? `✎ Write the codeword <span class="codeword">${h(fx.key)}</span> in your scouting report: ${inline(fx.text)}`
@@ -34,7 +38,7 @@ function choiceLine(c, nums) {
   return `<li class="gated">${pre}${inline(c.label)} <span class="turn">turn to <b>${n}</b></span></li>`;
 }
 
-function endingBlock(s, pack, nums, cfg) {
+function endingBlock(s, pack, nums) {
   const m = pack.matches[s.match];
   const next = pack.matches[s.match + 1];
   const restart = `start this match again at <b>${nums.get(m.start)}</b> with a fresh scoresheet. Keep your codewords.`;
@@ -48,8 +52,7 @@ function endingBlock(s, pack, nums, cfg) {
     return `<div class="book-end lose"><b>You lose: ${h(s.ending.text)}.</b> Your run ends here; ${restart}</div>`;
   }
   return `<div class="book-end decision"><b>Time. Decision.</b> ${s.ending.text ? h(s.ending.text) + ' ' : ''}
-    Check your scoresheet: most ${h(cfg.points.toLowerCase())} wins;${cfg.advantages ? ` if level, most ${h(cfg.advantages.toLowerCase())};` : ''}
-    if still level, fewest ${h(cfg.penalties.toLowerCase())}; if still level: ${h(cfg.tieText)} <b>If you won:</b> ${onward}
+    Check your scoresheet: ${h(pack.sport.decisionText())} <b>If you won:</b> ${onward}
     <b>If you lost:</b> ${restart}</div>`;
 }
 
@@ -58,8 +61,9 @@ export function renderBook(pack, beltHtml) {
   const meta = pack.meta;
   const total = pack.matches.length;
   const first = pack.matches[0];
-  const cfg = packConfig(meta);
-  const cols = [cfg.points, cfg.advantages, cfg.penalties].filter(Boolean);
+  const sport = pack.sport;
+  // Scoresheet columns read like the score line: primary first, then leftwards along the board.
+  const cols = sport.board.slice().reverse().map((id) => sport.counter(id).label);
 
   const scoresheet = `
     <section class="book-page scoresheet">
@@ -80,8 +84,8 @@ export function renderBook(pack, beltHtml) {
 
   const matches = pack.matches.map((m, i) => {
     const ordered = m.sections.slice().sort((a, b) => nums.get(a.id) - nums.get(b.id));
-    const stats = ['team', 'art', 'hand', 'grip', 'height', 'weight', 'record', 'time']
-      .filter((k) => m.meta[k]).map((k) => `<span><b>${h(k === 'art' ? 'background' : k)}:</b> ${h(m.meta[k])}</span>`).join(' · ');
+    const stats = sport.profile
+      .filter(([k]) => m.meta[k]).map(([k, label]) => `<span><b>${h(label.toLowerCase())}:</b> ${h(m.meta[k])}</span>`).join(' · ');
     return `
       <section class="book-page book-match">
         <p class="kicker">${h(roundName(m, i, total))}</p>
@@ -90,10 +94,13 @@ export function renderBook(pack, beltHtml) {
         <p class="book-stats">${stats}</p>
         ${m.meta.blurb ? `<p class="blurb">${inline(m.meta.blurb)}</p>` : ''}
         ${renderMarkdown(m.intro)}
-        ${cfg.target ? `<p class="book-target"><b>First to ${cfg.target}.</b> The moment either score reaches ${cfg.target}, the bout is over
-          (if both reach it in the same paragraph from level, it was a double at ${cfg.target - 1}–${cfg.target - 1}, which doesn't count: set both to ${cfg.target - 1} and read on).
-          If you got there, ${pack.matches[i + 1] ? `turn to <b>${nums.get(pack.matches[i + 1].start)}</b>` : 'turn to <b>the Podium</b>'};
-          if your opponent did, start again at <b>${nums.get(m.start)}</b>.</p>` : ''}
+        ${(() => {
+          const rule = sport.bookRule({
+            onward: pack.matches[i + 1] ? `turn to <b>${nums.get(pack.matches[i + 1].start)}</b>` : 'turn to <b>the Podium</b>',
+            restart: `start again at <b>${nums.get(m.start)}</b>.`,
+          });
+          return rule ? `<p class="book-target">${rule}</p>` : '';
+        })()}
         <p class="begin">Clear your score table. Begin at <b>${nums.get(m.start)}</b>.</p>
       </section>
       <section class="book-sections">
@@ -102,8 +109,8 @@ export function renderBook(pack, beltHtml) {
             <header><span class="num">${nums.get(s.id)}</span>
               <span class="sec-meta">${[s.clock && `⏱ ${h(s.clock)}`, s.position && h(s.position)].filter(Boolean).join(' · ')}</span></header>
             ${renderMarkdown(s.body)}
-            ${s.effects.length ? `<ul class="book-fx">${s.effects.map((fx) => `<li>${effectLine(fx, cfg)}</li>`).join('')}</ul>` : ''}
-            ${s.ending ? endingBlock(s, pack, nums, cfg) : `<ul class="book-choices">${s.choices.map((c) => choiceLine(c, nums)).join('')}</ul>`}
+            ${s.effects.length ? `<ul class="book-fx">${s.effects.map((fx) => `<li>${effectLine(fx, sport)}</li>`).join('')}</ul>` : ''}
+            ${s.ending ? endingBlock(s, pack, nums) : `<ul class="book-choices">${s.choices.map((c) => choiceLine(c, nums)).join('')}</ul>`}
           </article>`).join('')}
       </section>`;
   }).join('');

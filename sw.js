@@ -3,16 +3,23 @@
 // the cache makes the whole thing (including every pack the app has fetched)
 // work offline once installed.
 
-const CACHE = 'rya-v2';
+const CACHE = 'rya-v3';
 const SHELL = [
   './',
   'index.html',
   'css/style.css',
   'js/app.js',
   'js/book.js',
+  'js/engine.js',
   'js/markdown.js',
   'js/parser.js',
   'js/store.js',
+  'js/sports/index.js',
+  'js/sports/common.js',
+  'js/sports/bjj.js',
+  'js/sports/fencing.js',
+  'css/sports/bjj.css',
+  'css/sports/fencing.css',
   'manifest.webmanifest',
   'icons/icon.svg',
   'icons/icon-192.png',

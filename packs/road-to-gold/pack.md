@@ -6,6 +6,7 @@ author: Roll Your Own Adventure
 version: 1.0
 event: Harbour Open · Adult Absolute · Gi
 player: You
+sport: bjj
 player_belt: blue
 player_stripes: 2
 gold: The medal is heavier than you expected. Coach Teo hangs it on your neck himself, then immediately starts listing what you did wrong in the semifinal. That is how you know he is proud. You beat a judo black belt without playing his game, you out-waited a closed guard python, and you made a 10th Planet purple belt fight inside a gi. Oss.

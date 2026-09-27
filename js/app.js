@@ -8,9 +8,10 @@
 //   #/pack/<id>/book            printable gamebook edition
 
 import { renderMarkdown, escapeHtml, inline } from './markdown.js';
-import {
-  applyScoreEffect, applyTarget, choiceVisible, decide, emptyScore, endingsOf, packConfig,
-} from './parser.js';
+import { endingsOf } from './parser.js';
+import { endingHeadline, enterSection, startMatch, visibleChoices } from './engine.js';
+import { resolveSport } from './sports/index.js';
+import { scoreLine } from './sports/common.js';
 import {
   listPacks, loadPack, prefetchAll, importPackFiles, removeImported,
   loadProgress, saveProgress, resetProgress,
@@ -63,16 +64,46 @@ function showError(err) {
     <p>${h(err.message || err)}</p><p><a class="btn" href="#/">Back to the packs</a></p></section>`;
 }
 
+// ---- sport themes ----------------------------------------------------------
+
+const themeLinks = new Map();
+
+/** Load css/sports/<theme>.css once. Resolves when loaded (or failed: themes are optional). */
+function loadThemeCss(theme) {
+  if (!themeLinks.has(theme)) {
+    themeLinks.set(theme, new Promise((resolve) => {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = `css/sports/${encodeURIComponent(theme)}.css`;
+      link.onload = link.onerror = () => resolve();
+      document.head.appendChild(link);
+      setTimeout(resolve, 1500);
+    }));
+  }
+  return themeLinks.get(theme);
+}
+
+async function useSport(sport) {
+  await loadThemeCss(sport.theme);
+  document.body.dataset.theme = sport.theme;
+  const stamp = document.getElementById('stamp');
+  const footer = document.getElementById('footer-text');
+  if (stamp) { stamp.textContent = sport.text.stamp || ''; stamp.hidden = !sport.text.stamp; }
+  if (footer) footer.textContent = sport.text.footer || '';
+}
+
 // ---- router ----------------------------------------------------------------
 
 async function route() {
   document.body.classList.remove('book-mode');
-  document.body.dataset.theme = 'bjj';
   const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   try {
-    if (parts[0] !== 'pack') return renderHome();
+    if (parts[0] !== 'pack') {
+      await useSport(resolveSport({}));
+      return renderHome();
+    }
     const pack = await getPack(decodeURIComponent(parts[1]));
-    document.body.dataset.theme = packConfig(pack.meta).theme;
+    await useSport(pack.sport);
     if (parts[2] === 'match') return renderIntro(pack, Number(parts[3]) || 0);
     if (parts[2] === 'play') return renderPlay(pack);
     if (parts[2] === 'book') return renderBookRoute(pack);
@@ -95,7 +126,7 @@ async function renderHome() {
     const prog = loadProgress(e.id);
     const total = pack ? pack.matches.length : 0;
     const won = Object.keys(prog.wins).length;
-    return `<article class="pack-card gi">
+    return `<article class="pack-card surface">
       <div class="pack-card-top">
         <span class="kicker">${h(meta.event || 'Adventure pack')}</span>
         ${prog.medal ? '<span class="medal-mini" title="Gold medal won">🥇</span>' : ''}
@@ -178,7 +209,7 @@ function renderBracket(pack) {
     const state = won ? 'won' : unlocked ? 'open' : 'locked';
     return `<li class="bracket-round bracket-${state}">
       <div class="bracket-label">${h(roundName(m, i, total))}</div>
-      <div class="bracket-card gi">
+      <div class="bracket-card surface">
         <div class="bracket-opp">
           ${beltHtml(m.meta.belt, m.meta.stripes)}
           <div>
@@ -189,7 +220,7 @@ function renderBracket(pack) {
         <div class="bracket-meta">
           <span>${won ? '✔ Won' : unlocked ? 'Up next' : 'Locked'}</span>
           <span>${prog.attempts[i] || 0} attempts</span>
-          ${packConfig(pack.meta).target ? '' : `<span>${found}/${endings.length} endings</span>`}
+          ${pack.sport.text.showEndings ? `<span>${found}/${endings.length} endings</span>` : ''}
         </div>
         ${unlocked ? `<a class="btn ${won ? '' : 'btn-primary'}" href="#/pack/${encodeURIComponent(pack.id)}/match/${i}">${won ? 'Rematch' : 'Scout &amp; step on'}</a>` : ''}
       </div>
@@ -258,7 +289,7 @@ function renderIntro(pack, i) {
   if (i > 0 && !prog.wins[i - 1]) return go(`#/pack/${encodeURIComponent(pack.id)}`);
   setTitle(`${roundName(m, i, pack.matches.length)} vs ${m.meta.opponent}`);
   const meta = m.meta;
-  const stat = (k, label) => (meta[k] ? `<div><dt>${label}</dt><dd>${h(meta[k])}</dd></div>` : '');
+  const stat = (k, label) => (meta[k] ? `<div><dt>${h(label)}</dt><dd>${h(meta[k])}</dd></div>` : '');
 
   $app.innerHTML = `
     <nav class="crumbs"><a href="#/pack/${encodeURIComponent(pack.id)}">← Bracket</a></nav>
@@ -274,131 +305,56 @@ function renderIntro(pack, i) {
         ${meta.nickname ? `<span class="nickname">“${h(meta.nickname)}”</span>` : ''}
       </div>
     </section>
-    <section class="panel gi profile">
+    <section class="panel surface profile">
       <dl class="stats">
-        ${stat('team', 'Team')}${stat('art', 'Background')}${stat('hand', 'Hand')}${stat('grip', 'Grip')}${stat('height', 'Height')}${stat('weight', 'Weight')}${stat('record', 'Record')}${stat('time', 'Match time')}
+        ${pack.sport.profile.map(([k, label]) => stat(k, label)).join('')}
       </dl>
       ${meta.blurb ? `<p class="blurb">${inline(meta.blurb)}</p>` : ''}
     </section>
     ${m.intro ? `<section class="panel paper intro-text">${renderMarkdown(m.intro)}</section>` : ''}
     ${scoutingReportHtml(pack, prog, i)}
     <section class="row center">
-      <button class="btn btn-primary btn-big" id="bow">${h(packConfig(pack.meta).startLabel)}</button>
+      <button class="btn btn-primary btn-big" id="bow">${h(pack.sport.text.start)}</button>
     </section>`;
 
   $app.querySelector('#bow').addEventListener('click', () => {
-    startMatch(pack, i);
+    begin(pack, i);
     go(`#/pack/${encodeURIComponent(pack.id)}/play`);
   });
 }
 
-// ---- match engine ----------------------------------------------------------
+// ---- match (engine in js/engine.js; the app just saves after each step) -----
 
-function startMatch(pack, i) {
-  const prog = loadProgress(pack.id);
-  prog.attempts[i] = (prog.attempts[i] || 0) + 1;
-  prog.run = {
-    match: i,
-    section: null,
-    score: emptyScore(),
-    clock: pack.matches[i].meta.time || null,
-    log: [],
-    learned: [],
-    fresh: [],
-    ended: null,
-  };
-  enterSection(pack, prog, pack.matches[i].start, null);
+function begin(pack, i) {
+  saveProgress(pack.id, startMatch(pack, loadProgress(pack.id), i));
 }
 
-const toSecs = (c) => {
-  const m = /^(\d+):(\d{2})$/.exec(c || '');
-  return m ? Number(m[1]) * 60 + Number(m[2]) : null;
-};
-const fmtClock = (n) => `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`;
-
-// Each decision costs match time. An authored @clock wins, but the clock never
-// runs backwards; auto-ticking stops at 0:10 so only an authored ending says "time".
-function nextClock(current, authored, moved, tick, reset) {
-  const cur = toSecs(current);
-  const set = toSecs(authored);
-  if (set != null && (reset || cur == null)) return authored;
-  if (cur == null) return authored || current;
-  if (set != null) return fmtClock(Math.min(cur, set));
-  return moved && tick ? fmtClock(Math.max(Math.min(cur, 10), cur - tick)) : current;
+function step(pack, target, label) {
+  saveProgress(pack.id, enterSection(pack, loadProgress(pack.id), target, label));
 }
 
-function enterSection(pack, prog, id, choiceLabel) {
-  const run = prog.run;
-  const s = pack.sections.get(id);
-  if (!s) throw new Error(`Section "${id}" does not exist in this pack.`);
-  if (choiceLabel) run.log.push({ at: pack.sections.get(run.section).title, choice: choiceLabel });
-  run.section = id;
-  run.fresh = [];
-  const cfg = packConfig(pack.meta);
-  run.clock = nextClock(run.clock, s.clock, !!choiceLabel, cfg.tick, s.clockReset);
-  const before = { you: run.score.you.pts, them: run.score.them.pts };
-
-  for (const fx of s.effects) {
-    if (fx.type === 'learn') {
-      const isNew = fx.key ? !(fx.key in prog.codewords) : !prog.notes.some((n) => n.text === fx.text);
-      if (isNew) {
-        if (fx.key) prog.codewords[fx.key] = fx.text;
-        prog.notes.push({ match: run.match, key: fx.key, text: fx.text });
-      }
-      if (!run.learned.some((l) => l.text === fx.text)) run.learned.push({ key: fx.key, text: fx.text, isNew });
-      run.fresh.push({ ...fx, isNew });
-    } else {
-      applyScoreEffect(run.score, fx);
-      run.fresh.push(fx);
-    }
-  }
-
-  const reached = applyTarget(run.score, before, cfg.target);
-  if (reached === 'annulled') run.fresh.push({ type: 'annulled', value: cfg.target - 1 });
-
-  if (reached === 'you' || reached === 'them') {
-    // First to the target wins, whatever the section says next.
-    prog.endings[id] = true;
-    const win = reached === 'you';
-    run.ended = { type: 'target', win, by: 'target', text: '' };
-    if (win) {
-      prog.wins[run.match] = true;
-      if (run.match === pack.matches.length - 1) prog.medal = true;
-      prog.current = Math.max(prog.current, run.match + 1);
-    }
-  } else if (s.ending) {
-    prog.endings[id] = true;
-    let win = s.ending.type === 'win';
-    let by = s.ending.type === 'decision' ? null : 'submission';
-    if (s.ending.type === 'decision') ({ win, by } = decide(run.score));
-    run.ended = { type: s.ending.type, win, by, text: s.ending.text };
-    if (win) {
-      prog.wins[run.match] = true;
-      if (run.match === pack.matches.length - 1) prog.medal = true;
-      prog.current = Math.max(prog.current, run.match + 1);
-    }
-  }
-  saveProgress(pack.id, prog);
-}
+const ROLE_CLASS = { points: 'pts', advantage: 'adv', penalty: 'pen' };
 
 function scoreboardHtml(pack, run) {
   const m = pack.matches[run.match];
-  const cfg = packConfig(pack.meta);
+  const sport = pack.sport;
+  // Primary counter is the big column on the right; the rest sit to its left.
+  const cols = [...sport.board.filter((id) => id !== sport.primary), sport.primary];
+  const grid = `grid-template-columns: 1fr ${'var(--sb-col) '.repeat(cols.length - 1)}var(--sb-main)`;
+  const cls = (id) => (id === sport.primary ? 'pts' : ROLE_CLASS[sport.counter(id).role] || 'extra');
   const row = (who, name, belt, stripes) => {
     const sc = run.score[who];
-    const bumped = run.fresh.filter((f) => f.who === who);
-    const pulse = (type) => (bumped.some((f) => f.type === type) ? ' pulse' : '');
-    const lit = bumped.some((f) => f.type === 'points' && f.value > 0);
-    return `<div class="sb-row sb-${who}">
-      <div class="sb-name"><i class="sb-lamp${lit ? ' lit' : ''}" aria-hidden="true"></i>${beltHtml(belt, stripes)}<span>${h(name)}</span></div>
-      <div class="sb-pen${pulse('penalty')}" title="${h(cfg.penalties)}">${sc.pen}</div>
-      ${cfg.advantages ? `<div class="sb-adv${pulse('advantage')}" title="${h(cfg.advantages)}">${sc.adv}</div>` : ''}
-      <div class="sb-pts${pulse('points')}" title="${h(cfg.points)}">${sc.pts}</div>
+    const bumped = run.fresh.filter((f) => f.type === 'score' && f.who === who);
+    const pulse = (id) => (bumped.some((f) => f.counter === id) ? ' pulse' : '');
+    const lit = bumped.some((f) => f.counter === sport.primary && f.value > 0);
+    return `<div class="sb-row sb-${who}" style="${grid}">
+      <div class="sb-name">${sport.lamps ? `<i class="sb-lamp${lit ? ' lit' : ''}" aria-hidden="true"></i>` : ''}${beltHtml(belt, stripes)}<span>${h(name)}</span></div>
+      ${cols.map((id) => `<div class="sb-${cls(id)}${pulse(id)}" title="${h(sport.counter(id).label)}">${sc[id] || 0}</div>`).join('')}
     </div>`;
   };
-  return `<header class="scoreboard${cfg.advantages ? '' : ' sb-noadv'}" aria-label="Scoreboard">
+  return `<header class="scoreboard" aria-label="Scoreboard">
     <div class="sb-rows">
-      <div class="sb-head"><span>${cfg.target ? `First to ${cfg.target}` : ''}</span><span class="l-pen">${h(cfg.penaltiesShort)}</span>${cfg.advantages ? `<span class="l-adv">${h(cfg.advantagesShort)}</span>` : ''}<span>${h(cfg.pointsShort)}</span></div>
+      <div class="sb-head" style="${grid}"><span>${h(sport.boardNote())}</span>${cols.map((id) => `<span class="l-${cls(id)}">${h(sport.counter(id).short)}</span>`).join('')}</div>
       ${row('you', pack.meta.player || 'You', pack.meta.player_belt, pack.meta.player_stripes)}
       ${row('them', m.meta.opponent, m.meta.belt, m.meta.stripes)}
     </div>
@@ -410,36 +366,34 @@ function scoreboardHtml(pack, run) {
 }
 
 function effectsHtml(pack, run) {
-  const cfg = packConfig(pack.meta);
+  const sport = pack.sport;
   return run.fresh.map((fx) => {
-    if (fx.type === 'annulled') return `<div class="fx fx-learn"><b>DOUBLE ANNULLED</b> A double at ${fx.value}–${fx.value} doesn't count. Fence the last touch again.</div>`;
-    const who = fx.who === 'you' ? 'You' : 'Opponent';
-    if (fx.type === 'points') return `<div class="fx fx-${fx.who}"><b>+${fx.value}</b> ${who}${fx.label ? ` · ${h(fx.label)}` : ''}</div>`;
-    if (fx.type === 'advantage') return `<div class="fx fx-adv fx-${fx.who}"><b>${h(cfg.advantagesShort)}</b> ${who}${fx.label ? ` · ${h(fx.label)}` : ''}</div>`;
-    if (fx.type === 'penalty') return `<div class="fx fx-pen fx-${fx.who}"><b>${h(cfg.penaltiesShort)}</b> ${who}${fx.label ? ` · ${h(fx.label)}` : ''}</div>`;
+    if (fx.type === 'notice') return `<div class="fx fx-learn">${fx.html}</div>`;
     if (fx.type === 'learn') {
       return `<div class="fx fx-learn">✎ <b>${fx.isNew ? 'New scouting note' : 'Confirmed'}</b>${fx.key ? ` <span class="codeword">${h(fx.key)}</span>` : ''} ${inline(fx.text)}</div>`;
     }
-    return '';
+    if (fx.type !== 'score') return '';
+    const c = sport.counter(fx.counter);
+    const who = fx.who === 'you' ? 'You' : 'Opponent';
+    const why = fx.label ? ` · ${h(fx.label)}` : '';
+    const sign = fx.value > 0 ? '+' : '';
+    if (c.id === sport.primary) return `<div class="fx fx-${fx.who}"><b>${sign}${fx.value}</b> ${who}${why}</div>`;
+    const tag = fx.value === 1 ? h(c.short) : `${sign}${fx.value} ${h(c.short)}`;
+    return `<div class="fx fx-${ROLE_CLASS[c.role] || 'extra'} fx-${fx.who}"><b>${tag}</b> ${who}${why}</div>`;
   }).join('');
 }
 
 function endingHtml(pack, prog, run) {
-  const cfg = packConfig(pack.meta);
+  const t = pack.sport.text;
   const e = run.ended;
   const m = pack.matches[run.match];
   const last = run.match === pack.matches.length - 1;
   const base = `#/pack/${encodeURIComponent(pack.id)}`;
-  const y = run.score.you;
-  const t = run.score.them;
-  const scoreLine = `${y.pts}–${t.pts}` + (y.adv || t.adv ? ` (adv ${y.adv}–${t.adv})` : '') + (y.pen || t.pen ? ` (${cfg.penaltiesShort.toLowerCase()} ${y.pen}–${t.pen})` : '');
-  const how = e.type === 'target'
-    ? (e.win ? `First to ${cfg.target}: ${scoreLine}.` : `Your opponent reaches ${cfg.target} first: ${scoreLine}.`)
-    : e.type === 'decision'
-      ? (e.by === 'referee'
-        ? h(cfg.tieText)
-        : `Decision on ${e.by === 'points' ? cfg.points.toLowerCase() : e.by === 'advantages' ? (cfg.advantages || 'advantages').toLowerCase() : cfg.penalties.toLowerCase()}: ${scoreLine}.`)
-      : h(e.text);
+  const endings = endingsOf(m);
+  const found = endings.filter((id) => prog.endings[id]).length;
+  const line = scoreLine(run.score, pack.sport);
+  const how = h(endingHeadline(pack, run));
+  const counts = t.showEndings ? ` · ${found}/${endings.length} endings found` : '';
 
   const learned = run.learned.length
     ? `<div class="lessons"><h4>What this match taught you</h4><ul class="notes">${run.learned.map((l) =>
@@ -451,28 +405,25 @@ function endingHtml(pack, prog, run) {
       `<li><span class="muted">${h(l.at)}:</span> ${inline(l.choice)}</li>`).join('')}</ol></details>`
     : '';
 
-  const endings = endingsOf(m);
-  const found = endings.filter((id) => prog.endings[id]).length;
-
   if (e.win) {
     const next = last
       ? `<button class="btn btn-primary btn-big" id="gold">Step onto the podium</button>`
       : `<a class="btn btn-primary btn-big" href="${base}/match/${run.match + 1}">Next: ${h(roundName(pack.matches[run.match + 1], run.match + 1, pack.matches.length))}</a>`;
     return `<section class="ending ending-win">
-      <div class="ending-stamp">${h(cfg.winStamp)}</div>
-      <p class="ending-how">${e.type === 'decision' || e.type === 'target' ? how : `Victory by ${how}`}</p>
-      <p class="muted">Final score ${scoreLine}${cfg.target ? '' : ` · ${found}/${endings.length} endings found`}</p>
+      <div class="ending-stamp">${h(t.winStamp)}</div>
+      <p class="ending-how">${e.type === 'win' ? `${h(t.winBy)} ${how}` : how}</p>
+      <p class="muted">Final score ${line}${counts}</p>
       ${learned}${replay}
       <div class="row center">${next}<a class="btn" href="${base}">Bracket</a></div>
     </section>`;
   }
   return `<section class="ending ending-lose">
-    <div class="ending-stamp">${h(e.type === 'decision' ? cfg.decisionLoseStamp : cfg.loseStamp)}</div>
+    <div class="ending-stamp">${h(e.type === 'decision' ? t.decisionLoseStamp : t.loseStamp)}</div>
     <p class="ending-how">${how}</p>
-    <p class="muted">Final score ${scoreLine}${cfg.target ? '' : ` · ${found}/${endings.length} endings found`}</p>
+    <p class="muted">Final score ${line}${counts}</p>
     ${learned}${replay}
     <div class="row center">
-      <button class="btn btn-primary btn-big" id="again">${h(cfg.retryLabel)}</button>
+      <button class="btn btn-primary btn-big" id="again">${h(t.retry)}</button>
       <a class="btn" href="${base}/match/${run.match}">Review scouting report</a>
       <a class="btn" href="${base}">Bracket</a>
     </div>
@@ -487,7 +438,7 @@ function renderPlay(pack) {
   const s = pack.sections.get(run.section);
   setTitle(`vs ${m.meta.opponent}`);
 
-  const choices = run.ended ? [] : s.choices.filter((c) => choiceVisible(c, prog.codewords));
+  const choices = visibleChoices(pack, prog);
   const choicesHtml = choices.map((c, n) => `
     <li><button class="choice${c.cond && !c.cond.negate ? ' choice-scouted' : ''}" data-target="${h(c.target)}" data-label="${h(c.label)}">
       <span class="choice-key">${n + 1}</span>
@@ -498,7 +449,7 @@ function renderPlay(pack) {
   $app.innerHTML = `
     ${scoreboardHtml(pack, run)}
     <div class="play-bar">
-      ${s.position ? `<span class="position"><span class="kicker">${h(packConfig(pack.meta).position)}</span> ${h(s.position)}</span>` : '<span></span>'}
+      ${s.position ? `<span class="position"><span class="kicker">${h(pack.sport.text.position)}</span> ${h(s.position)}</span>` : '<span></span>'}
       <span class="row">
         <button class="btn btn-small btn-ghost" id="notes-btn">Scouting report</button>
         <button class="btn btn-small btn-ghost" id="quit">Restart match</button>
@@ -513,26 +464,25 @@ function renderPlay(pack) {
     <dialog id="notes-dlg" class="paper">${scoutingReportHtml(pack, prog)}<form method="dialog"><button class="btn">Close</button></form></dialog>`;
 
   $app.querySelectorAll('.choice').forEach((b) => b.addEventListener('click', () => {
-    const p = loadProgress(pack.id);
-    enterSection(pack, p, b.dataset.target, b.dataset.label);
+    step(pack, b.dataset.target, b.dataset.label);
     renderPlay(pack);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }));
   $app.querySelector('#notes-btn').addEventListener('click', () => $app.querySelector('#notes-dlg').showModal());
   $app.querySelector('#quit').addEventListener('click', () => {
     if (!run.ended && !confirm('Restart this match from the handshake? Your scouting notes are kept.')) return;
-    startMatch(pack, run.match);
+    begin(pack, run.match);
     renderPlay(pack);
   });
   const again = $app.querySelector('#again');
-  if (again) again.addEventListener('click', () => { startMatch(pack, run.match); renderPlay(pack); });
+  if (again) again.addEventListener('click', () => { begin(pack, run.match); renderPlay(pack); });
   const gold = $app.querySelector('#gold');
   if (gold) gold.addEventListener('click', () => renderGold(pack));
 }
 
 function renderGold(pack) {
   const prog = loadProgress(pack.id);
-  const cfg = packConfig(pack.meta);
+  const t = pack.sport.text;
   const attempts = Object.values(prog.attempts).reduce((a, b) => a + b, 0);
   const endings = pack.matches.reduce((a, m) => a + endingsOf(m).length, 0);
   const found = Object.keys(prog.endings).length;
@@ -542,7 +492,7 @@ function renderGold(pack) {
       <div class="medal" aria-hidden="true"><span>1</span></div>
       <h1>Gold</h1>
       <p class="hero-lede">${inline(pack.meta.gold || 'Top of the podium. Somewhere, your coach is pretending not to cry.')}</p>
-      <p class="muted">${attempts} ${cfg.target ? 'bouts fenced' : 'matches wrestled'} · ${prog.notes.length} scouting notes${cfg.target ? '' : ` · ${found}/${endings} endings discovered`}</p>
+      <p class="muted">${attempts} ${h(t.played)} · ${prog.notes.length} scouting notes${t.showEndings ? ` · ${found}/${endings} endings discovered` : ''}</p>
       <div class="row center">
         <a class="btn btn-primary" href="#/pack/${encodeURIComponent(pack.id)}">Back to the bracket</a>
         <a class="btn" href="#/">Other packs</a>
@@ -589,5 +539,9 @@ window.addEventListener('hashchange', route);
 (async () => {
   packEntries = await listPacks();
   await route();
-  prefetchAll(packEntries);
+  await prefetchAll(packEntries);
+  // Warm every sport theme so installed copies look right offline.
+  for (const e of packEntries) {
+    try { loadThemeCss((await loadPack(e)).sport.theme); } catch { /* offline */ }
+  }
 })();

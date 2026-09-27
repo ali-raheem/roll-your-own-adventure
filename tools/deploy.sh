@@ -8,6 +8,7 @@ DEST="/var/www/shoryuken.me/roll/"
 cd "$(dirname "$0")/.."
 
 node tools/validate.mjs
+node --test tools/test.mjs
 
 rsync -av --delete \
   --exclude .git --exclude .gitignore --exclude tools --exclude docs \

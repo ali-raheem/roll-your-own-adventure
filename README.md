@@ -51,12 +51,15 @@ node tools/validate.mjs          # or: npm run validate
 
 | Path | What |
 |---|---|
-| `index.html`, `css/style.css` | App shell and theme |
-| `js/parser.js` | Pack format parser, linting, scoring rules, book numbering (shared with Node) |
+| `index.html`, `css/style.css`, `css/sports/` | App shell, shared styles, per-sport themes |
+| `js/parser.js` | Pack format parser, linting, book numbering (sport-neutral, shared with Node) |
+| `js/engine.js` | Match engine: scoring, end rules, decisions, clock (shared with Node) |
+| `js/sports/` | Sport modules (BJJ, épée) and shared rule helpers; see [docs/SPORTS.md](docs/SPORTS.md) |
 | `js/markdown.js` | Small escaping markdown renderer |
 | `js/store.js` | Pack loading, imports, progress in localStorage |
 | `js/app.js` | Screens: packs, bracket, opponent intro, match, endings, podium |
 | `js/book.js` | Printable gamebook renderer |
 | `sw.js`, `manifest.webmanifest`, `icons/` | Offline/PWA support |
 | `packs/` | Adventure packs (`index.json` lists them) |
-| `tools/validate.mjs` | Pack validator |
+| `tools/validate.mjs` | Pack validator (structure, plus win-rate simulation for first-to-N sports) |
+| `tools/test.mjs` | Engine and sport tests (`npm test`) |

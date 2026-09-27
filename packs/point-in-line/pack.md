@@ -6,20 +6,7 @@ author: Roll Your Own Adventure
 version: 1.0
 event: Capital Épée Open · Senior Men · Direct elimination
 player: You
-theme: fencing
-target: 15
-clock_tick: 60
-points_label: Touches
-points_short: TOUCH
-advantage_label: none
-penalty_label: Cards
-penalty_short: CARD
-position_label: Phase
-start_label: Salute. En garde.
-retry_label: Salute, shake hands. Again.
-win_stamp: Victory
-lose_stamp: Eliminated
-decision_lose_stamp: Time
+sport: fencing
 tie_text: Level at time. The priority minute ends without a touch, and the coin toss gave priority to your opponent.
 gold: They hand you the medal and a small bronze trophy shaped like a fencer mid-lunge, which you will keep on your desk for the rest of your life. You beat a giant by taking his blade, a hornet by stepping back, and a professor by refusing to answer his questions. Maître Colette says "Not bad", which from her is a parade.
 matches:
