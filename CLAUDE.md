@@ -87,6 +87,9 @@ types including `text/markdown` for `.md`). Deploy with `tools/deploy.sh`; it ex
 `docs/`, `README.md`, `package.json` and this file. New JS/CSS files must be added to `SHELL` in
 `sw.js` (and `CACHE` bumped) so installed copies work offline.
 
+- The manifest `id` is `/roll/roll-your-own-adventure`: a distinct, app-specific value, never `./` or
+  anything generic. Don't change it casually: a new id is a new app identity, so installed copies are
+  offered a fresh install.
 - nginx changes: back up the config to `/root/`, edit, `nginx -t`, then `systemctl reload nginx`.
 - The site homepage `/var/www/shoryuken.me/index.html` links here from its Apps card list
   (`<a class="card" href="./roll/">`). It is hand-edited on the server.
