@@ -5,8 +5,10 @@ Guidance for Claude Code when working in this repository.
 ## Project
 
 **Roll Your Own Adventure**: a static, offline-capable (PWA) choose-your-own-adventure engine for
-grappling stories, plus the bundled BJJ pack **Road to Gold** (three-match gi absolute: a judoka, a
-closed-guard specialist, a 10th Planet purple belt). Live at https://shoryuken.me/roll/.
+combat sports, plus two bundled packs: **Road to Gold** (BJJ: three-match gi absolute against a judoka, a
+closed-guard specialist and a 10th Planet purple belt) and **Point in Line** (épée: three direct
+elimination bouts to 15 against a tall counter-attacker, a flèche specialist and a second-intention
+tactician). Live at https://shoryuken.me/roll/.
 
 Plain HTML/CSS/ES modules. No build step, no runtime dependencies, no framework. Keep it that way.
 
@@ -41,8 +43,22 @@ All asset paths are relative so the app works under any subpath (it is served fr
 - Directives: `@points you|them N reason`, `@advantage`, `@penalty`, `@clock m:ss`, `@position`,
   `@learn [CODE |] text`, `@win text`, `@lose text`, `@decision`.
 - Effects fire on entering a section. Decision = points, then advantages, then fewer penalties; full tie
-  goes to the opponent. The clock auto-ticks 20s per move (floor 0:10); `@clock` never runs it backwards.
+  goes to the opponent. The clock auto-ticks `clock_tick` seconds per move (default 20, floor 0:10); `@clock` never runs it backwards.
 - Every non-ending section needs at least one ungated choice; the validator enforces this.
+- Sport-specific presentation and rules come from `packConfig()` in `js/parser.js` (pack.md keys:
+  `theme`, `target`, `clock_tick`, `*_label`, stamps, `tie_text`). BJJ values are the defaults, so never
+  hard-code sport terms in `app.js`/`book.js`; add a config key instead. Themes live in `css/style.css`
+  under `body[data-theme="..."]`.
+- `@clock m:ss reset` starts a new period. With `target`, reaching N ends the bout mid-section; the
+  validator's path simulation reports win rates; keep first runs hard and the final the hardest.
+
+## Content rules for Point in Line
+
+- Épée only: whole-body target, no right of way, doubles count (annulled at 14–14), DE to 15 or three
+  3-minute periods, priority minute on a tie, rear-line crossing gives a touch, P-cards for passivity
+  go to the fencer behind (both if level), refusing to salute is a black card.
+- Each decision covers about a minute of fencing and several touches; prose must agree with the
+  `@points` numbers in the same section. Don't state running scores.
 
 ## Content rules for Road to Gold
 

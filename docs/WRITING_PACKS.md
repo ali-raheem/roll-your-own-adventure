@@ -51,6 +51,27 @@ matches:
 Intro markdown: the event, the ruleset, anything the reader needs before match one.
 ```
 
+### Pack settings (optional)
+
+The defaults suit BJJ. Other combat sports override them in `pack.md` front matter
+(`packs/point-in-line/pack.md` is a fencing example):
+
+| Key | Default | Effect |
+|---|---|---|
+| `theme` | `bjj` | Visual theme: `bjj` (mat, gi, belts) or `fencing` (piste, whites, scoring lamps) |
+| `target` | none | First to N points wins instantly (fencing: `15`). From level, both reaching N in one section is an annulled double: both stay at N-1 |
+| `clock_tick` | `20` | Seconds the clock runs down per decision (`0` to disable) |
+| `points_label` / `points_short` | Points / PTS | Scoreboard and book labels |
+| `advantage_label` / `advantage_short` | Advantages / ADV | Set `advantage_label: none` to hide the column |
+| `penalty_label` / `penalty_short` | Penalties / PEN | e.g. Cards / CARD |
+| `position_label` | Position | Label above the story, e.g. Phase |
+| `start_label`, `retry_label` | Bow in. Oss. / Shake hands. Run it back. | Button text |
+| `win_stamp`, `lose_stamp`, `decision_lose_stamp` | Hand raised / Tap / Decision lost | Ending stamps |
+| `tie_text` | referee gives it to your opponent | Shown when a decision is dead level |
+
+`player_belt` and each opponent's `belt` are optional; leave them out for sports without belts.
+Opponent cards also show `hand` and `grip` if set.
+
 ## Match files
 
 ```markdown
@@ -110,6 +131,7 @@ Lines starting with `@` inside a section:
 | `@advantage them Near sweep` | Add an advantage |
 | `@penalty you Stalling` | Add a penalty |
 | `@clock 4:30` | Set the match clock (it never runs backwards) |
+| `@clock 3:00 reset` | Start a new period: set the clock even if that's later than the current time |
 | `@position Kesa gatame · bottom` | Position label above the story |
 | `@learn Note text` | Add a note to the scouting report |
 | `@learn CODEWORD \| Note text` | Add a note and a **codeword** that can unlock choices |
@@ -117,8 +139,13 @@ Lines starting with `@` inside a section:
 | `@lose Submission: triangle` | Losing ending |
 | `@decision` | Match ends; the scoresheet decides |
 
-Effects fire when the player *enters* the section. The clock also ticks down 20 seconds per decision
-on its own (stopping at 0:10); authored `@clock` values take over whenever you set them.
+Effects fire when the player *enters* the section. The clock also ticks down on its own (`clock_tick`
+seconds per decision, default 20, stopping at 0:10); authored `@clock` values take over whenever you set them.
+
+In a first-to-N pack (`target`), a bout usually ends mid-way through a section when a score reaches N,
+so don't state exact scores in the prose, and do end the final period with a `@decision` section. The
+validator plays every path with the real scoring rules and reports the win rate for a first-time player
+and for one who knows every codeword. Aim for a clearly lower first-run rate, with the final bout the hardest.
 
 Decisions use: points, then advantages, then fewer penalties; a complete tie goes to the opponent.
 

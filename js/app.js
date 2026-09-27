@@ -9,7 +9,7 @@
 
 import { renderMarkdown, escapeHtml, inline } from './markdown.js';
 import {
-  applyScoreEffect, choiceVisible, decide, emptyScore, endingsOf,
+  applyScoreEffect, applyTarget, choiceVisible, decide, emptyScore, endingsOf, packConfig,
 } from './parser.js';
 import {
   listPacks, loadPack, prefetchAll, importPackFiles, removeImported,
@@ -25,7 +25,8 @@ let installPrompt = null;
 
 const h = escapeHtml;
 
-export function beltHtml(color = 'white', stripes = 0, extraClass = '') {
+export function beltHtml(color, stripes = 0, extraClass = '') {
+  if (!color) return '';
   const n = Math.max(0, Math.min(4, Number(stripes) || 0));
   return `<span class="belt belt-${h(color)} ${extraClass}" title="${h(color)} belt${n ? `, ${n} stripe${n > 1 ? 's' : ''}` : ''}">` +
     `<span class="belt-bar">${'<i></i>'.repeat(n)}</span></span>`;
@@ -66,10 +67,12 @@ function showError(err) {
 
 async function route() {
   document.body.classList.remove('book-mode');
+  document.body.dataset.theme = 'bjj';
   const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   try {
     if (parts[0] !== 'pack') return renderHome();
     const pack = await getPack(decodeURIComponent(parts[1]));
+    document.body.dataset.theme = packConfig(pack.meta).theme;
     if (parts[2] === 'match') return renderIntro(pack, Number(parts[3]) || 0);
     if (parts[2] === 'play') return renderPlay(pack);
     if (parts[2] === 'book') return renderBookRoute(pack);
@@ -110,9 +113,9 @@ async function renderHome() {
 
   $app.innerHTML = `
     <section class="hero">
-      <p class="kicker">A choose-your-own-adventure engine for grapplers</p>
+      <p class="kicker">A choose-your-own-adventure engine for fighters</p>
       <h1 class="hero-title">Roll Your Own <span>Adventure</span></h1>
-      <p class="hero-lede">Step onto the mat. Read your opponent. Pick your grips. Every choice has a
+      <p class="hero-lede">Step onto the mat or the piste. Read your opponent. Pick your moment. Every choice has a
       realistic consequence, and every loss teaches you something about the person across from you.
       There are only a few narrow roads to gold.</p>
     </section>
@@ -186,7 +189,7 @@ function renderBracket(pack) {
         <div class="bracket-meta">
           <span>${won ? '✔ Won' : unlocked ? 'Up next' : 'Locked'}</span>
           <span>${prog.attempts[i] || 0} attempts</span>
-          <span>${found}/${endings.length} endings</span>
+          ${packConfig(pack.meta).target ? '' : `<span>${found}/${endings.length} endings</span>`}
         </div>
         ${unlocked ? `<a class="btn ${won ? '' : 'btn-primary'}" href="#/pack/${encodeURIComponent(pack.id)}/match/${i}">${won ? 'Rematch' : 'Scout &amp; step on'}</a>` : ''}
       </div>
@@ -205,7 +208,7 @@ function renderBracket(pack) {
       <h1>${h(pack.meta.title)}</h1>
       ${pack.meta.subtitle ? `<p class="subtitle">${h(pack.meta.subtitle)}</p>` : ''}
       <div class="you-card">
-        ${beltHtml(pack.meta.player_belt || 'white', pack.meta.player_stripes)}
+        ${beltHtml(pack.meta.player_belt, pack.meta.player_stripes)}
         <span>${h(pack.meta.player || 'You')}</span>
       </div>
     </section>
@@ -273,14 +276,14 @@ function renderIntro(pack, i) {
     </section>
     <section class="panel gi profile">
       <dl class="stats">
-        ${stat('team', 'Team')}${stat('art', 'Background')}${stat('height', 'Height')}${stat('weight', 'Weight')}${stat('record', 'Record')}${stat('time', 'Match time')}
+        ${stat('team', 'Team')}${stat('art', 'Background')}${stat('hand', 'Hand')}${stat('grip', 'Grip')}${stat('height', 'Height')}${stat('weight', 'Weight')}${stat('record', 'Record')}${stat('time', 'Match time')}
       </dl>
       ${meta.blurb ? `<p class="blurb">${inline(meta.blurb)}</p>` : ''}
     </section>
     ${m.intro ? `<section class="panel paper intro-text">${renderMarkdown(m.intro)}</section>` : ''}
     ${scoutingReportHtml(pack, prog, i)}
     <section class="row center">
-      <button class="btn btn-primary btn-big" id="bow">Bow in. Oss.</button>
+      <button class="btn btn-primary btn-big" id="bow">${h(packConfig(pack.meta).startLabel)}</button>
     </section>`;
 
   $app.querySelector('#bow').addEventListener('click', () => {
@@ -315,12 +318,13 @@ const fmtClock = (n) => `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')
 
 // Each decision costs match time. An authored @clock wins, but the clock never
 // runs backwards; auto-ticking stops at 0:10 so only an authored ending says "time".
-function nextClock(current, authored, moved) {
+function nextClock(current, authored, moved, tick, reset) {
   const cur = toSecs(current);
   const set = toSecs(authored);
+  if (set != null && (reset || cur == null)) return authored;
   if (cur == null) return authored || current;
   if (set != null) return fmtClock(Math.min(cur, set));
-  return moved ? fmtClock(Math.max(Math.min(cur, 10), cur - 20)) : current;
+  return moved && tick ? fmtClock(Math.max(Math.min(cur, 10), cur - tick)) : current;
 }
 
 function enterSection(pack, prog, id, choiceLabel) {
@@ -330,7 +334,9 @@ function enterSection(pack, prog, id, choiceLabel) {
   if (choiceLabel) run.log.push({ at: pack.sections.get(run.section).title, choice: choiceLabel });
   run.section = id;
   run.fresh = [];
-  run.clock = nextClock(run.clock, s.clock, !!choiceLabel);
+  const cfg = packConfig(pack.meta);
+  run.clock = nextClock(run.clock, s.clock, !!choiceLabel, cfg.tick, s.clockReset);
+  const before = { you: run.score.you.pts, them: run.score.them.pts };
 
   for (const fx of s.effects) {
     if (fx.type === 'learn') {
@@ -347,7 +353,20 @@ function enterSection(pack, prog, id, choiceLabel) {
     }
   }
 
-  if (s.ending) {
+  const reached = applyTarget(run.score, before, cfg.target);
+  if (reached === 'annulled') run.fresh.push({ type: 'annulled', value: cfg.target - 1 });
+
+  if (reached === 'you' || reached === 'them') {
+    // First to the target wins, whatever the section says next.
+    prog.endings[id] = true;
+    const win = reached === 'you';
+    run.ended = { type: 'target', win, by: 'target', text: '' };
+    if (win) {
+      prog.wins[run.match] = true;
+      if (run.match === pack.matches.length - 1) prog.medal = true;
+      prog.current = Math.max(prog.current, run.match + 1);
+    }
+  } else if (s.ending) {
     prog.endings[id] = true;
     let win = s.ending.type === 'win';
     let by = s.ending.type === 'decision' ? null : 'submission';
@@ -364,20 +383,22 @@ function enterSection(pack, prog, id, choiceLabel) {
 
 function scoreboardHtml(pack, run) {
   const m = pack.matches[run.match];
+  const cfg = packConfig(pack.meta);
   const row = (who, name, belt, stripes) => {
     const sc = run.score[who];
     const bumped = run.fresh.filter((f) => f.who === who);
     const pulse = (type) => (bumped.some((f) => f.type === type) ? ' pulse' : '');
+    const lit = bumped.some((f) => f.type === 'points' && f.value > 0);
     return `<div class="sb-row sb-${who}">
-      <div class="sb-name">${beltHtml(belt, stripes)}<span>${h(name)}</span></div>
-      <div class="sb-pen${pulse('penalty')}" title="Penalties">${sc.pen}</div>
-      <div class="sb-adv${pulse('advantage')}" title="Advantages">${sc.adv}</div>
-      <div class="sb-pts${pulse('points')}" title="Points">${sc.pts}</div>
+      <div class="sb-name"><i class="sb-lamp${lit ? ' lit' : ''}" aria-hidden="true"></i>${beltHtml(belt, stripes)}<span>${h(name)}</span></div>
+      <div class="sb-pen${pulse('penalty')}" title="${h(cfg.penalties)}">${sc.pen}</div>
+      ${cfg.advantages ? `<div class="sb-adv${pulse('advantage')}" title="${h(cfg.advantages)}">${sc.adv}</div>` : ''}
+      <div class="sb-pts${pulse('points')}" title="${h(cfg.points)}">${sc.pts}</div>
     </div>`;
   };
-  return `<header class="scoreboard" aria-label="Scoreboard">
+  return `<header class="scoreboard${cfg.advantages ? '' : ' sb-noadv'}" aria-label="Scoreboard">
     <div class="sb-rows">
-      <div class="sb-head"><span></span><span class="l-pen">PEN</span><span class="l-adv">ADV</span><span>PTS</span></div>
+      <div class="sb-head"><span>${cfg.target ? `First to ${cfg.target}` : ''}</span><span class="l-pen">${h(cfg.penaltiesShort)}</span>${cfg.advantages ? `<span class="l-adv">${h(cfg.advantagesShort)}</span>` : ''}<span>${h(cfg.pointsShort)}</span></div>
       ${row('you', pack.meta.player || 'You', pack.meta.player_belt, pack.meta.player_stripes)}
       ${row('them', m.meta.opponent, m.meta.belt, m.meta.stripes)}
     </div>
@@ -388,12 +409,14 @@ function scoreboardHtml(pack, run) {
   </header>`;
 }
 
-function effectsHtml(run) {
+function effectsHtml(pack, run) {
+  const cfg = packConfig(pack.meta);
   return run.fresh.map((fx) => {
+    if (fx.type === 'annulled') return `<div class="fx fx-learn"><b>DOUBLE ANNULLED</b> A double at ${fx.value}–${fx.value} doesn't count. Fence the last touch again.</div>`;
     const who = fx.who === 'you' ? 'You' : 'Opponent';
     if (fx.type === 'points') return `<div class="fx fx-${fx.who}"><b>+${fx.value}</b> ${who}${fx.label ? ` · ${h(fx.label)}` : ''}</div>`;
-    if (fx.type === 'advantage') return `<div class="fx fx-adv fx-${fx.who}"><b>ADV</b> ${who}${fx.label ? ` · ${h(fx.label)}` : ''}</div>`;
-    if (fx.type === 'penalty') return `<div class="fx fx-pen fx-${fx.who}"><b>PEN</b> ${who}${fx.label ? ` · ${h(fx.label)}` : ''}</div>`;
+    if (fx.type === 'advantage') return `<div class="fx fx-adv fx-${fx.who}"><b>${h(cfg.advantagesShort)}</b> ${who}${fx.label ? ` · ${h(fx.label)}` : ''}</div>`;
+    if (fx.type === 'penalty') return `<div class="fx fx-pen fx-${fx.who}"><b>${h(cfg.penaltiesShort)}</b> ${who}${fx.label ? ` · ${h(fx.label)}` : ''}</div>`;
     if (fx.type === 'learn') {
       return `<div class="fx fx-learn">✎ <b>${fx.isNew ? 'New scouting note' : 'Confirmed'}</b>${fx.key ? ` <span class="codeword">${h(fx.key)}</span>` : ''} ${inline(fx.text)}</div>`;
     }
@@ -402,18 +425,21 @@ function effectsHtml(run) {
 }
 
 function endingHtml(pack, prog, run) {
+  const cfg = packConfig(pack.meta);
   const e = run.ended;
   const m = pack.matches[run.match];
   const last = run.match === pack.matches.length - 1;
   const base = `#/pack/${encodeURIComponent(pack.id)}`;
   const y = run.score.you;
   const t = run.score.them;
-  const scoreLine = `${y.pts}–${t.pts}` + (y.adv || t.adv ? ` (adv ${y.adv}–${t.adv})` : '') + (y.pen || t.pen ? ` (pen ${y.pen}–${t.pen})` : '');
-  const how = e.type === 'decision'
-    ? (e.by === 'referee'
-      ? 'Dead even on the scoresheet. The referee’s decision goes to your opponent.'
-      : `Decision on ${e.by}: ${scoreLine}.`)
-    : h(e.text);
+  const scoreLine = `${y.pts}–${t.pts}` + (y.adv || t.adv ? ` (adv ${y.adv}–${t.adv})` : '') + (y.pen || t.pen ? ` (${cfg.penaltiesShort.toLowerCase()} ${y.pen}–${t.pen})` : '');
+  const how = e.type === 'target'
+    ? (e.win ? `First to ${cfg.target}: ${scoreLine}.` : `Your opponent reaches ${cfg.target} first: ${scoreLine}.`)
+    : e.type === 'decision'
+      ? (e.by === 'referee'
+        ? h(cfg.tieText)
+        : `Decision on ${e.by === 'points' ? cfg.points.toLowerCase() : e.by === 'advantages' ? (cfg.advantages || 'advantages').toLowerCase() : cfg.penalties.toLowerCase()}: ${scoreLine}.`)
+      : h(e.text);
 
   const learned = run.learned.length
     ? `<div class="lessons"><h4>What this match taught you</h4><ul class="notes">${run.learned.map((l) =>
@@ -433,20 +459,20 @@ function endingHtml(pack, prog, run) {
       ? `<button class="btn btn-primary btn-big" id="gold">Step onto the podium</button>`
       : `<a class="btn btn-primary btn-big" href="${base}/match/${run.match + 1}">Next: ${h(roundName(pack.matches[run.match + 1], run.match + 1, pack.matches.length))}</a>`;
     return `<section class="ending ending-win">
-      <div class="ending-stamp">Hand raised</div>
-      <p class="ending-how">${e.type === 'decision' ? how : `Victory by ${how}`}</p>
-      <p class="muted">Final score ${scoreLine} · ${found}/${endings.length} endings found</p>
+      <div class="ending-stamp">${h(cfg.winStamp)}</div>
+      <p class="ending-how">${e.type === 'decision' || e.type === 'target' ? how : `Victory by ${how}`}</p>
+      <p class="muted">Final score ${scoreLine}${cfg.target ? '' : ` · ${found}/${endings.length} endings found`}</p>
       ${learned}${replay}
       <div class="row center">${next}<a class="btn" href="${base}">Bracket</a></div>
     </section>`;
   }
   return `<section class="ending ending-lose">
-    <div class="ending-stamp">${e.type === 'decision' ? 'Decision lost' : 'Tap'}</div>
+    <div class="ending-stamp">${h(e.type === 'decision' ? cfg.decisionLoseStamp : cfg.loseStamp)}</div>
     <p class="ending-how">${how}</p>
-    <p class="muted">Final score ${scoreLine} · ${found}/${endings.length} endings found</p>
+    <p class="muted">Final score ${scoreLine}${cfg.target ? '' : ` · ${found}/${endings.length} endings found`}</p>
     ${learned}${replay}
     <div class="row center">
-      <button class="btn btn-primary btn-big" id="again">Shake hands. Run it back.</button>
+      <button class="btn btn-primary btn-big" id="again">${h(cfg.retryLabel)}</button>
       <a class="btn" href="${base}/match/${run.match}">Review scouting report</a>
       <a class="btn" href="${base}">Bracket</a>
     </div>
@@ -472,7 +498,7 @@ function renderPlay(pack) {
   $app.innerHTML = `
     ${scoreboardHtml(pack, run)}
     <div class="play-bar">
-      ${s.position ? `<span class="position"><span class="kicker">Position</span> ${h(s.position)}</span>` : '<span></span>'}
+      ${s.position ? `<span class="position"><span class="kicker">${h(packConfig(pack.meta).position)}</span> ${h(s.position)}</span>` : '<span></span>'}
       <span class="row">
         <button class="btn btn-small btn-ghost" id="notes-btn">Scouting report</button>
         <button class="btn btn-small btn-ghost" id="quit">Restart match</button>
@@ -481,7 +507,7 @@ function renderPlay(pack) {
     <article class="story paper">
       <h2 class="story-title">${inline(s.title)}</h2>
       ${renderMarkdown(s.body)}
-      ${effectsHtml(run)}
+      ${effectsHtml(pack, run)}
     </article>
     ${run.ended ? endingHtml(pack, prog, run) : `<ol class="choices">${choicesHtml}</ol>`}
     <dialog id="notes-dlg" class="paper">${scoutingReportHtml(pack, prog)}<form method="dialog"><button class="btn">Close</button></form></dialog>`;
@@ -506,6 +532,7 @@ function renderPlay(pack) {
 
 function renderGold(pack) {
   const prog = loadProgress(pack.id);
+  const cfg = packConfig(pack.meta);
   const attempts = Object.values(prog.attempts).reduce((a, b) => a + b, 0);
   const endings = pack.matches.reduce((a, m) => a + endingsOf(m).length, 0);
   const found = Object.keys(prog.endings).length;
@@ -515,7 +542,7 @@ function renderGold(pack) {
       <div class="medal" aria-hidden="true"><span>1</span></div>
       <h1>Gold</h1>
       <p class="hero-lede">${inline(pack.meta.gold || 'Top of the podium. Somewhere, your coach is pretending not to cry.')}</p>
-      <p class="muted">${attempts} matches wrestled · ${prog.notes.length} scouting notes · ${found}/${endings} endings discovered</p>
+      <p class="muted">${attempts} ${cfg.target ? 'bouts fenced' : 'matches wrestled'} · ${prog.notes.length} scouting notes${cfg.target ? '' : ` · ${found}/${endings} endings discovered`}</p>
       <div class="row center">
         <a class="btn btn-primary" href="#/pack/${encodeURIComponent(pack.id)}">Back to the bracket</a>
         <a class="btn" href="#/">Other packs</a>

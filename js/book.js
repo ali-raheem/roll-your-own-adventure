@@ -3,7 +3,7 @@
 // instructions for a paper scoresheet. Print it from the browser (or save as PDF).
 
 import { renderMarkdown, escapeHtml as h, inline } from './markdown.js';
-import { bookNumbers } from './parser.js';
+import { bookNumbers, packConfig } from './parser.js';
 
 function roundName(m, i, total) {
   if (m.meta.round) return m.meta.round;
@@ -11,13 +11,13 @@ function roundName(m, i, total) {
   return fromEnd === 1 ? 'Final' : fromEnd === 2 ? 'Semifinal' : fromEnd === 3 ? 'Quarterfinal' : `Round ${i + 1}`;
 }
 
-function effectLine(fx) {
+function effectLine(fx, cfg) {
   const who = fx.who === 'you' ? 'yourself' : 'your opponent';
   const why = fx.label ? ` (${h(fx.label)})` : '';
   switch (fx.type) {
-    case 'points': return `✎ Score <b>${fx.value > 0 ? '+' : ''}${fx.value} points</b> for ${who}${why}.`;
-    case 'advantage': return `✎ Mark <b>one advantage</b> for ${who}${why}.`;
-    case 'penalty': return `✎ Mark <b>one penalty</b> against ${who}${why}.`;
+    case 'points': return `✎ Add <b>${fx.value > 0 ? '+' : ''}${fx.value}</b> to ${who === 'yourself' ? 'your' : 'your opponent’s'} ${h(cfg.points.toLowerCase())}${why}.`;
+    case 'advantage': return `✎ Mark <b>one</b> in ${who === 'yourself' ? 'your' : 'your opponent’s'} ${h((cfg.advantages || 'advantages').toLowerCase())}${why}.`;
+    case 'penalty': return `✎ Mark <b>one</b> in ${who === 'yourself' ? 'your' : 'your opponent’s'} ${h(cfg.penalties.toLowerCase())}${why}.`;
     case 'learn':
       return fx.key
         ? `✎ Write the codeword <span class="codeword">${h(fx.key)}</span> in your scouting report: ${inline(fx.text)}`
@@ -34,7 +34,7 @@ function choiceLine(c, nums) {
   return `<li class="gated">${pre}${inline(c.label)} <span class="turn">turn to <b>${n}</b></span></li>`;
 }
 
-function endingBlock(s, pack, nums) {
+function endingBlock(s, pack, nums, cfg) {
   const m = pack.matches[s.match];
   const next = pack.matches[s.match + 1];
   const restart = `start this match again at <b>${nums.get(m.start)}</b> with a fresh scoresheet. Keep your codewords.`;
@@ -48,8 +48,8 @@ function endingBlock(s, pack, nums) {
     return `<div class="book-end lose"><b>You lose: ${h(s.ending.text)}.</b> Your run ends here; ${restart}</div>`;
   }
   return `<div class="book-end decision"><b>Time. Decision.</b> ${s.ending.text ? h(s.ending.text) + ' ' : ''}
-    Check your scoresheet: most points wins; if level, most advantages; if still level, fewest penalties;
-    if still level, the referee gives it to your opponent. <b>If you won:</b> ${onward}
+    Check your scoresheet: most ${h(cfg.points.toLowerCase())} wins;${cfg.advantages ? ` if level, most ${h(cfg.advantages.toLowerCase())};` : ''}
+    if still level, fewest ${h(cfg.penalties.toLowerCase())}; if still level: ${h(cfg.tieText)} <b>If you won:</b> ${onward}
     <b>If you lost:</b> ${restart}</div>`;
 }
 
@@ -58,16 +58,18 @@ export function renderBook(pack, beltHtml) {
   const meta = pack.meta;
   const total = pack.matches.length;
   const first = pack.matches[0];
+  const cfg = packConfig(meta);
+  const cols = [cfg.points, cfg.advantages, cfg.penalties].filter(Boolean);
 
   const scoresheet = `
     <section class="book-page scoresheet">
       <h2>Scoresheet</h2>
       <p>Photocopy this page or use pencil. Clear the score table every time you start a match; never erase codewords.</p>
       <table>
-        <thead><tr><th></th><th>Points</th><th>Advantages</th><th>Penalties</th></tr></thead>
+        <thead><tr><th></th>${cols.map((c) => `<th>${h(c)}</th>`).join('')}</tr></thead>
         <tbody>
-          <tr><th>You</th><td></td><td></td><td></td></tr>
-          <tr><th>Opponent</th><td></td><td></td><td></td></tr>
+          <tr><th>You</th>${cols.map(() => '<td></td>').join('')}</tr>
+          <tr><th>Opponent</th>${cols.map(() => '<td></td>').join('')}</tr>
         </tbody>
       </table>
       <h3>Scouting report (codewords)</h3>
@@ -78,16 +80,20 @@ export function renderBook(pack, beltHtml) {
 
   const matches = pack.matches.map((m, i) => {
     const ordered = m.sections.slice().sort((a, b) => nums.get(a.id) - nums.get(b.id));
-    const stats = ['team', 'art', 'height', 'weight', 'record', 'time']
+    const stats = ['team', 'art', 'hand', 'grip', 'height', 'weight', 'record', 'time']
       .filter((k) => m.meta[k]).map((k) => `<span><b>${h(k === 'art' ? 'background' : k)}:</b> ${h(m.meta[k])}</span>`).join(' · ');
     return `
       <section class="book-page book-match">
         <p class="kicker">${h(roundName(m, i, total))}</p>
         <h2>${h(m.meta.opponent)}${m.meta.nickname ? ` <span class="nickname">“${h(m.meta.nickname)}”</span>` : ''}</h2>
-        <p>${beltHtml(m.meta.belt, m.meta.stripes)}</p>
+        ${m.meta.belt ? `<p>${beltHtml(m.meta.belt, m.meta.stripes)}</p>` : ''}
         <p class="book-stats">${stats}</p>
         ${m.meta.blurb ? `<p class="blurb">${inline(m.meta.blurb)}</p>` : ''}
         ${renderMarkdown(m.intro)}
+        ${cfg.target ? `<p class="book-target"><b>First to ${cfg.target}.</b> The moment either score reaches ${cfg.target}, the bout is over
+          (if both reach it in the same paragraph from level, it was a double at ${cfg.target - 1}–${cfg.target - 1}, which doesn't count: set both to ${cfg.target - 1} and read on).
+          If you got there, ${pack.matches[i + 1] ? `turn to <b>${nums.get(pack.matches[i + 1].start)}</b>` : 'turn to <b>the Podium</b>'};
+          if your opponent did, start again at <b>${nums.get(m.start)}</b>.</p>` : ''}
         <p class="begin">Clear your score table. Begin at <b>${nums.get(m.start)}</b>.</p>
       </section>
       <section class="book-sections">
@@ -96,8 +102,8 @@ export function renderBook(pack, beltHtml) {
             <header><span class="num">${nums.get(s.id)}</span>
               <span class="sec-meta">${[s.clock && `⏱ ${h(s.clock)}`, s.position && h(s.position)].filter(Boolean).join(' · ')}</span></header>
             ${renderMarkdown(s.body)}
-            ${s.effects.length ? `<ul class="book-fx">${s.effects.map((fx) => `<li>${effectLine(fx)}</li>`).join('')}</ul>` : ''}
-            ${s.ending ? endingBlock(s, pack, nums) : `<ul class="book-choices">${s.choices.map((c) => choiceLine(c, nums)).join('')}</ul>`}
+            ${s.effects.length ? `<ul class="book-fx">${s.effects.map((fx) => `<li>${effectLine(fx, cfg)}</li>`).join('')}</ul>` : ''}
+            ${s.ending ? endingBlock(s, pack, nums, cfg) : `<ul class="book-choices">${s.choices.map((c) => choiceLine(c, nums)).join('')}</ul>`}
           </article>`).join('')}
       </section>`;
   }).join('');
@@ -108,14 +114,14 @@ export function renderBook(pack, beltHtml) {
       <h1>${h(meta.title)}</h1>
       ${meta.subtitle ? `<p class="subtitle">${h(meta.subtitle)}</p>` : ''}
       ${meta.author ? `<p class="byline">by ${h(meta.author)}</p>` : ''}
-      <p class="book-belt">${beltHtml(meta.player_belt, meta.player_stripes, 'belt-lg')}</p>
+      ${meta.player_belt ? `<p class="book-belt">${beltHtml(meta.player_belt, meta.player_stripes, 'belt-lg')}</p>` : ''}
     </section>
     <section class="book-page">
       <h2>How to play this book</h2>
       <p>Do not read this book from front to back. Each numbered paragraph describes a moment of a match
       and ends with choices; pick one and turn to the paragraph it names.</p>
       <ul>
-        <li><b>Scoresheet.</b> When a paragraph tells you to score points, advantages or penalties, mark them on
+        <li><b>Scoresheet.</b> When a paragraph tells you to score ${h(cols.map((c) => c.toLowerCase()).join(', '))}, mark them on
         your scoresheet. If a match goes to the buzzer, the scoresheet decides it.</li>
         <li><b>Codewords.</b> When you learn something about an opponent, write the codeword down. Codewords
         survive losses: some choices are only open to fighters who have done their scouting.</li>

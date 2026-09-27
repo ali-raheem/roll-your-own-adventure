@@ -3,7 +3,7 @@
 // the cache makes the whole thing (including every pack the app has fetched)
 // work offline once installed.
 
-const CACHE = 'rya-v1';
+const CACHE = 'rya-v2';
 const SHELL = [
   './',
   'index.html',

@@ -7,7 +7,9 @@
 
 import { readFile } from 'node:fs/promises';
 import { join, resolve, basename } from 'node:path';
-import { buildPack, lintPack, parseFrontmatter, endingsOf } from '../js/parser.js';
+import {
+  buildPack, lintPack, parseFrontmatter, endingsOf, applyTarget, applyScoreEffect, decide, emptyScore, choiceVisible,
+} from '../js/parser.js';
 
 const root = resolve(import.meta.dirname, '..');
 
@@ -37,6 +39,42 @@ function shortestWin(pack, m) {
   return null;
 }
 
+/**
+ * First-to-N packs: play every path through a match with the real scoring rules
+ * and report how many win. `known` is the codeword set the player starts with;
+ * codewords learned along a path unlock choices later on that same path.
+ */
+function simulate(pack, m, known, limit = 200000) {
+  const target = Number(pack.meta.target) || 0;
+  const res = { paths: 0, wins: 0, best: null, worst: null, truncated: false };
+  const walk = (id, score, codes, depth) => {
+    if (res.paths >= limit || depth > 60) { res.truncated = true; return; }
+    const s = pack.sections.get(id);
+    const before = { you: score.you.pts, them: score.them.pts };
+    const sc = structuredClone(score);
+    const cw = { ...codes };
+    for (const fx of s.effects) {
+      if (fx.type === 'learn') { if (fx.key) cw[fx.key] = true; } else applyScoreEffect(sc, fx);
+    }
+    const reached = applyTarget(sc, before, target);
+    let win = null;
+    if (reached === 'you' || reached === 'them') win = reached === 'you';
+    else if (s.ending) win = s.ending.type === 'decision' ? decide(sc).win : s.ending.type === 'win';
+    if (win !== null) {
+      res.paths++;
+      if (win) res.wins++;
+      const line = `${sc.you.pts}-${sc.them.pts}`;
+      const margin = sc.you.pts - sc.them.pts;
+      if (!res.best || margin > res.best.margin) res.best = { margin, line };
+      if (!res.worst || margin < res.worst.margin) res.worst = { margin, line };
+      return;
+    }
+    for (const c of s.choices) if (choiceVisible(c, cw)) walk(c.target, sc, cw, depth + 1);
+  };
+  walk(m.start, emptyScore(), known, 0);
+  return res;
+}
+
 async function main() {
   let dirs = process.argv.slice(2).map((d) => resolve(d));
   if (!dirs.length) {
@@ -55,6 +93,15 @@ async function main() {
       const codes = new Set(m.sections.flatMap((s) => s.effects.filter((f) => f.type === 'learn' && f.key).map((f) => f.key)));
       console.log(`  ${m.file}: ${m.sections.length} sections, ${count('win')} wins / ${count('lose')} losses / ${count('decision')} decisions, ` +
         `${codes.size} codewords, shortest win ${shortestWin(pack, m) ?? 'none (decision only)'} moves`);
+    }
+    if (Number(pack.meta.target) > 0) {
+      const all = {};
+      for (const s of pack.sections.values()) for (const f of s.effects) if (f.type === 'learn' && f.key) all[f.key] = true;
+      for (const m of pack.matches) {
+        const fmt = (r) => `${r.wins}/${r.paths} paths win (${Math.round((100 * r.wins) / Math.max(1, r.paths))}%), best ${r.best?.line}, worst ${r.worst?.line}${r.truncated ? ', truncated' : ''}`;
+        console.log(`  ${m.file} first run: ${fmt(simulate(pack, m, {}))}`);
+        console.log(`  ${m.file} all codewords: ${fmt(simulate(pack, m, all))}`);
+      }
     }
     console.log(`  ${pack.sections.size} sections, ~${words} words`);
     if (problems.length) {

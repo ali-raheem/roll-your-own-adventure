@@ -1,5 +1,6 @@
 {
   "packs": [
-    { "id": "road-to-gold", "path": "packs/road-to-gold/", "title": "Road to Gold" }
+    { "id": "road-to-gold", "path": "packs/road-to-gold/", "title": "Road to Gold" },
+    { "id": "point-in-line", "path": "packs/point-in-line/", "title": "Point in Line" }
   ]
 }

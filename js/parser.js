@@ -78,9 +78,13 @@ function parseDirective(name, arg, section, errors, where) {
       }
       break;
     }
-    case 'clock':
-      section.clock = arg.trim();
+    case 'clock': {
+      // "@clock 3:00 reset" starts a new period: the clock may go back up.
+      const m = arg.trim().match(/^(\S+)(\s+reset)?$/);
+      section.clock = m ? m[1] : arg.trim();
+      section.clockReset = !!(m && m[2]);
       break;
+    }
     case 'position':
       section.position = arg.trim();
       break;
@@ -118,6 +122,7 @@ export function parseMatch(text, file = 'match.md') {
         choices: [],
         ending: null,
         clock: null,
+        clockReset: false,
         position: null,
       };
       sections.push(cur);
@@ -229,7 +234,9 @@ export function lintPack(pack) {
         problems.push(`${m.file}: "${s.id}" only has codeword-gated choices; a first-time player is stuck`);
       }
     }
-    if (!wins) problems.push(`${m.file}: no reachable way to win`);
+    const scoresTarget = Number(pack.meta.target) > 0 &&
+      m.sections.some((s) => reach.has(s.id) && s.effects.some((f) => f.type === 'points' && f.who === 'you' && f.value > 0));
+    if (!wins && !scoresTarget) problems.push(`${m.file}: no reachable way to win`);
   }
   for (const k of required) if (!learned.has(k)) problems.push(`codeword ${k} is required but never learned`);
   return problems;
@@ -245,6 +252,59 @@ export function choiceVisible(choice, codewords) {
   if (!choice.cond) return true;
   const has = Object.prototype.hasOwnProperty.call(codewords, choice.cond.key);
   return choice.cond.negate ? !has : has;
+}
+
+/**
+ * Per-pack presentation and rule settings, with BJJ defaults. Packs override
+ * any of these in pack.md front matter (see docs/WRITING_PACKS.md).
+ */
+export function packConfig(meta = {}) {
+  const pick = (k, d) => (meta[k] != null && meta[k] !== '' ? meta[k] : d);
+  const adv = pick('advantage_label', 'Advantages');
+  return {
+    theme: pick('theme', 'bjj'),
+    target: Number(meta.target) || 0,
+    tick: meta.clock_tick != null ? Number(meta.clock_tick) : 20,
+    points: pick('points_label', 'Points'),
+    pointsShort: pick('points_short', 'PTS'),
+    advantages: adv.toLowerCase() === 'none' ? null : adv,
+    advantagesShort: pick('advantage_short', 'ADV'),
+    penalties: pick('penalty_label', 'Penalties'),
+    penaltiesShort: pick('penalty_short', 'PEN'),
+    position: pick('position_label', 'Position'),
+    startLabel: pick('start_label', 'Bow in. Oss.'),
+    retryLabel: pick('retry_label', 'Shake hands. Run it back.'),
+    winStamp: pick('win_stamp', 'Hand raised'),
+    loseStamp: pick('lose_stamp', 'Tap'),
+    decisionLoseStamp: pick('decision_lose_stamp', 'Decision lost'),
+    tieText: pick('tie_text', 'Dead even on the scoresheet. The referee’s decision goes to your opponent.'),
+  };
+}
+
+/**
+ * First-to-N scoring (fencing bouts to 15). Called after a section's effects.
+ * If both sides reach the target in the same section, the side that was ahead
+ * before it gets there first; from level, it is a double at N-1 all, which
+ * doesn't count (both stay at N-1). Returns 'you', 'them', 'annulled' or null.
+ */
+export function applyTarget(score, before, target) {
+  if (!target) return null;
+  const y = score.you;
+  const t = score.them;
+  if (y.pts >= target && t.pts >= target) {
+    if (before.you === before.them) {
+      y.pts = target - 1;
+      t.pts = target - 1;
+      return 'annulled';
+    }
+    const first = before.you > before.them ? 'you' : 'them';
+    score[first].pts = target;
+    score[first === 'you' ? 'them' : 'you'].pts = target - 1;
+    return first;
+  }
+  if (y.pts >= target) { y.pts = target; return 'you'; }
+  if (t.pts >= target) { t.pts = target; return 'them'; }
+  return null;
 }
 
 /** IBJJF-style decision: points, then advantages, then fewer penalties. */

@@ -1,7 +1,7 @@
 # Roll Your Own Adventure
 
-A static, offline-capable choose-your-own-adventure engine for grappling stories, with a bundled BJJ
-tournament pack, **Road to Gold**.
+A static, offline-capable choose-your-own-adventure engine for combat sports, with two bundled
+packs: **Road to Gold** (BJJ) and **Point in Line** (épée fencing).
 
 You're a blue belt in a combined blue/purple gi absolute. Three matches stand between you and gold:
 
@@ -12,8 +12,13 @@ You're a blue belt in a combined blue/purple gi absolute. Three matches stand be
 3. **Final: Jax Moreno**, a 10th Planet purple belt in a borrowed gi: lockdown, electric chair, the
    truck, rubber guard, and straight ankle locks.
 
+**Point in Line** is an épée direct-elimination tournament: bouts to 15 against Henrik "The Heron"
+(a two-metre left-handed counter-attacker), Luca "The Hornet" (a relentless flèche specialist) and
+Aurélien "Le Professeur" (a second-intention tactician who has watched your earlier bouts).
+
 Each loss adds to your scouting report. Codewords you learn unlock smarter options the next time you
-face that opponent. The scoreboard uses IBJJF-style points, and decisions are real.
+face that opponent. The scoreboard follows each sport's rules (IBJJF-style points for BJJ; first to 15 touches, doubles and
+cards for épée), and decisions are real.
 
 ## Run it
 
