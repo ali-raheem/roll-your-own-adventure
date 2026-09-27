@@ -2,6 +2,7 @@
   "name": "Roll Your Own Adventure",
   "short_name": "RollAdventure",
   "description": "Choose-your-own-adventure grappling: read your opponent, pick your grips, learn your way to gold.",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
