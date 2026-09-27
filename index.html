@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Roll Your Own Adventure</title>
+  <meta name="description" content="A choose-your-own-adventure engine for grapplers. Load an adventure pack, step on the mat, and learn your way to gold.">
+  <meta name="theme-color" content="#0f1a2e">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="mat-bg" aria-hidden="true"></div>
+  <header class="topbar no-print">
+    <a class="brand" href="#/">
+      <span class="brand-knot" aria-hidden="true"></span>
+      <span>Roll Your Own <em>Adventure</em></span>
+    </a>
+    <span class="oss">OSS</span>
+  </header>
+  <main id="app" class="wrap">
+    <p class="loading">Tying the belt…</p>
+  </main>
+  <footer class="footer no-print">
+    <p>Train safe. Tap early. Tap often. · Works offline once loaded · Add to home screen to install</p>
+  </footer>
+  <noscript><p class="wrap">This adventure needs JavaScript. For a JavaScript-free version, print the book edition.</p></noscript>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
