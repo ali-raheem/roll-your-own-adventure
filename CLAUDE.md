@@ -34,7 +34,7 @@ tools/deploy.sh               # validate, test, rsync to server, check live URLs
 | `js/app.js` | Hash router and screens: `#/`, `#/pack/<id>`, `/match/<n>`, `/play`, `/book` |
 | `js/book.js` | Printable gamebook (numbered paragraphs, scoresheet, codeword instructions) |
 | `css/style.css` | Shared layout and components incl. print CSS for the book; no sport looks |
-| `sw.js` | Service worker: network-first with cache fallback. Bump `CACHE` if you change the precache list |
+| `sw.js` | Service worker: network-first with cache fallback. Bump `VERSION` if you change the precache list. Only touches caches under its own `CACHE_PREFIX` and requests inside its scope (other apps share the origin) |
 | `packs/index.json` | Lists bundled packs; `packs/<id>/pack.md` lists its match files |
 | `docs/WRITING_PACKS.md` | Authoring format reference (keep in sync with parser changes) |
 
@@ -85,7 +85,7 @@ Server: `root@185.163.204.17`, web root `/var/www/shoryuken.me/roll/` (nginx sit
 `/etc/nginx/sites-enabled/shoryuken.me`, `location /roll/` block with no-cache headers and explicit MIME
 types including `text/markdown` for `.md`). Deploy with `tools/deploy.sh`; it excludes `tools/`,
 `docs/`, `README.md`, `package.json` and this file. New JS/CSS files must be added to `SHELL` in
-`sw.js` (and `CACHE` bumped) so installed copies work offline.
+`sw.js` (and `VERSION` bumped) so installed copies work offline.
 
 - The manifest `id` is `/roll/roll-your-own-adventure`: a distinct, app-specific value, never `./` or
   anything generic. Don't change it casually: a new id is a new app identity, so installed copies are

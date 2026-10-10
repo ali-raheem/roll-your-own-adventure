@@ -2,8 +2,16 @@
 // with a cache fallback. Network-first keeps authored packs fresh while online;
 // the cache makes the whole thing (including every pack the app has fetched)
 // work offline once installed.
+//
+// Other apps share this origin, so the worker only touches caches under its own
+// CACHE_PREFIX and only handles requests inside its own scope.
 
-const CACHE = 'rya-v4';
+const VERSION = 'v5';
+const SCOPE = new URL(self.registration.scope);
+const CACHE_PREFIX = `rya:${SCOPE.pathname}:`;
+const CACHE = `${CACHE_PREFIX}${VERSION}`;
+// Caches from before the prefix included the scope ('rya-v1' … 'rya-v4').
+const isLegacy = (k) => /^rya-v\d+$/.test(k);
 const SHELL = [
   './',
   'index.html',
@@ -34,14 +42,14 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => (k.startsWith(CACHE_PREFIX) || isLegacy(k)) && k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-  if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
+  if (req.method !== 'GET' || !req.url.startsWith(SCOPE.href)) return;
   event.respondWith((async () => {
     const cache = await caches.open(CACHE);
     try {
