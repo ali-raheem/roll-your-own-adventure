@@ -6,7 +6,7 @@
 // Other apps share this origin, so the worker only touches caches under its own
 // CACHE_PREFIX and only handles requests inside its own scope.
 
-const VERSION = 'v5';
+const VERSION = 'v6';
 const SCOPE = new URL(self.registration.scope);
 const CACHE_PREFIX = `rya:${SCOPE.pathname}:`;
 const CACHE = `${CACHE_PREFIX}${VERSION}`;
@@ -36,7 +36,7 @@ const SHELL = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (event) => {
@@ -53,7 +53,8 @@ self.addEventListener('fetch', (event) => {
   event.respondWith((async () => {
     const cache = await caches.open(CACHE);
     try {
-      const res = await fetch(req);
+      // 'no-cache' revalidates past the long max-age Cloudflare stamps on scripts.
+      const res = await fetch(req, { cache: 'no-cache' });
       if (res.ok) cache.put(req, res.clone());
       return res;
     } catch (err) {
