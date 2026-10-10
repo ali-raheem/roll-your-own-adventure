@@ -92,5 +92,5 @@ types including `text/markdown` for `.md`). Deploy with `tools/deploy.sh`; it ex
   offered a fresh install.
 - nginx changes: back up the config to `/root/`, edit, `nginx -t`, then `systemctl reload nginx`.
 - The site homepage `/var/www/shoryuken.me/index.html` links here from its Apps card list
-  (`<a class="card" href="./roll/">`). It is hand-edited on the server.
+  (`<a class="card" href="./roll/">`). Edit it locally in `../webroot/index.html` and deploy it (see `../webroot/CLAUDE.md`).
 - After deploying, check in a browser that a match starts and the book view loads offline.
