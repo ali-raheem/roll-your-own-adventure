@@ -72,3 +72,7 @@ node tools/validate.mjs          # or: npm run validate
 | `packs/` | Adventure packs (`index.json` lists them) |
 | `tools/validate.mjs` | Pack validator (structure, plus win-rate simulation for first-to-N sports) |
 | `tools/test.mjs` | Engine and sport tests (`npm test`) |
+
+## Licence
+
+[MIT](LICENSE) © 2026 Ali Raheem.

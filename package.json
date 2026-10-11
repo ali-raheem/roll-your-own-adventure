@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Static, offline-capable choose-your-own-adventure engine for grappling stories.",
+  "license": "MIT",
   "scripts": {
     "validate": "node tools/validate.mjs",
     "test": "node --test tools/test.mjs",
