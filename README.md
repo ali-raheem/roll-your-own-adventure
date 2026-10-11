@@ -1,5 +1,14 @@
 # Roll Your Own Adventure
 
+[![CI](https://github.com/ali-raheem/roll-your-own-adventure/actions/workflows/ci.yml/badge.svg)](https://github.com/ali-raheem/roll-your-own-adventure/actions/workflows/ci.yml) [![GitHub Pages](https://github.com/ali-raheem/roll-your-own-adventure/actions/workflows/pages.yml/badge.svg)](https://github.com/ali-raheem/roll-your-own-adventure/actions/workflows/pages.yml)
+
+**▶ Try it live: [shoryuken.me/roll](https://shoryuken.me/roll/)** · mirror on [GitHub Pages](https://ali-raheem.github.io/roll-your-own-adventure/) · installable, works offline
+
+<p align="center">
+  <a href="https://shoryuken.me/roll/"><img src="docs/screenshots/desktop.webp" alt="Roll Your Own Adventure on a desktop browser" width="74%"></a>
+  <a href="https://shoryuken.me/roll/"><img src="docs/screenshots/mobile.webp" alt="Roll Your Own Adventure on a phone" width="22%"></a>
+</p>
+
 A static, offline-capable choose-your-own-adventure engine for combat sports, with two bundled
 packs: **Road to Gold** (BJJ) and **Point in Line** (épée fencing).
 
