@@ -11,7 +11,7 @@ node tools/validate.mjs
 node --test tools/test.mjs
 
 rsync -av --delete \
-  --exclude .git --exclude .gitignore --exclude tools --exclude docs \
+  --exclude .git --exclude .github --exclude .gitignore --exclude .claude --exclude tools --exclude docs \
   --exclude package.json --exclude README.md --exclude CLAUDE.md \
   ./ "$HOST:$DEST"
 

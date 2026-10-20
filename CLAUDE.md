@@ -17,9 +17,17 @@ Plain HTML/CSS/ES modules. No build step, no runtime dependencies, no framework.
 ```bash
 python3 -m http.server 8080   # run locally (npm run serve); must be HTTP, not file://
 node tools/validate.mjs       # validate all packs (npm run validate); run after every pack edit
+node tools/validate.mjs packs/point-in-line   # one pack (any folder, e.g. an unbundled draft)
 node --test tools/test.mjs    # engine and sport tests (npm test); run after every engine change
+node --test --test-name-pattern='fencing' tools/test.mjs   # single test(s) by name
 tools/deploy.sh               # validate, test, rsync to server, check live URLs
 ```
+
+The validator output gives more than pass/fail: per-match section, win, loss and decision counts, the
+shortest winning line, and (for sports with end rules) simulated win rates for a first run and for a
+run with every codeword. Use those numbers to check difficulty after editing a match. CI
+(`.github/workflows/ci.yml`) runs `npm run validate && npm test` on Node 24, and `pages.yml`
+publishes the GitHub Pages mirror from `main`.
 
 ## Layout
 
@@ -35,7 +43,7 @@ tools/deploy.sh               # validate, test, rsync to server, check live URLs
 | `js/book.js` | Printable gamebook (numbered paragraphs, scoresheet, codeword instructions) |
 | `css/style.css` | Shared layout and components incl. print CSS for the book; no sport looks |
 | `sw.js` | Service worker: network-first with cache fallback. Bump `VERSION` if you change the precache list. Only touches caches under its own `CACHE_PREFIX` and requests inside its scope (other apps share the origin) |
-| `packs/index.json` | Lists bundled packs; `packs/<id>/pack.md` lists its match files |
+| `packs/index.json` | Lists bundled packs (also what the validator checks by default); `packs/<id>/pack.md` lists its match files. Pack files are not in the precache list: the service worker caches them as they are fetched |
 | `docs/WRITING_PACKS.md` | Authoring format reference (keep in sync with parser changes) |
 
 All asset paths are relative so the app works under any subpath (it is served from `/roll/`).
@@ -45,7 +53,8 @@ All asset paths are relative so the app works under any subpath (it is served fr
 - Section: `## Title {#id}`. IDs are unique across the whole pack; prefix per match (`j-`, `p-`, `l-`).
 - Choice: `- [Label](#target)` optionally `{if CODEWORD}` / `{if !CODEWORD}`. Links stay within one match.
 - Directives: `@points you|them N reason`, `@advantage`, `@penalty`, `@clock m:ss`, `@position`,
-  `@learn [CODE |] text`, `@win text`, `@lose text`, `@decision`.
+  `@learn [CODE |] text`, `@win text`, `@lose text`, `@decision`. `@score you|them <counter> N reason`
+  targets any sport counter by id or alias; `@points`/`@advantage`/`@penalty` are shorthands by role.
 - Effects fire on entering a section. Decision = points, then advantages, then fewer penalties; full tie
   goes to the opponent. The clock auto-ticks `clock_tick` seconds per move (default 20, floor 0:10); `@clock` never runs it backwards.
 - Every non-ending section needs at least one ungated choice; the validator enforces this.
@@ -83,7 +92,7 @@ All asset paths are relative so the app works under any subpath (it is served fr
 
 Server: `root@185.163.204.17`, web root `/var/www/shoryuken.me/roll/` (nginx site
 `/etc/nginx/sites-enabled/shoryuken.me`, `location /roll/` block with no-cache headers and explicit MIME
-types including `text/markdown` for `.md`). Deploy with `tools/deploy.sh`; it excludes `tools/`,
+types including `text/markdown` for `.md`). Deploy with `tools/deploy.sh`; it excludes `.git*`, `.github/`, `.claude/`, `tools/`,
 `docs/`, `README.md`, `package.json` and this file. New JS/CSS files must be added to `SHELL` in
 `sw.js` (and `VERSION` bumped) so installed copies work offline.
 
