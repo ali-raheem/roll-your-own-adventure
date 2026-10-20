@@ -15,7 +15,7 @@ blurb: His father runs the academy. He has been playing closed guard since he wa
 ---
 
 You caught the end of his quarterfinal. He pulled guard in the first five seconds, broke the other guy's
-posture like snapping a breadstick, and finished a triangle before the two-minute mark. He didn't look
+posture like snapping a breadstick, and finished a [[triangle]] before the two-minute mark. He didn't look
 tired. He didn't look anything.
 
 Coach Teo taps you on the chest three times. "Posture," he says. "Posture. *Posture.*"
@@ -80,7 +80,7 @@ holding his leg.
 The referee's hand comes up: **two fingers**. Takedown.
 
 :::rule
-If a player pulls guard while their opponent is holding a single leg, the pull is scored as a takedown
+If a player pulls guard while their opponent is holding a [[single leg]], the pull is scored as a takedown
 for the player holding the leg.
 :::
 
@@ -150,7 +150,7 @@ jerks his knees to his chest, your posture collapses forward, and his right hand
 collar while your arms are busy holding up your own bodyweight.
 
 :::coach
-Hands on his chest means straight arms and elbows away from your ribs. That's the entry to armbars and
+Hands on his chest means straight arms and elbows away from your ribs. That's the entry to [[armbars]] and
 triangles, and it doesn't stop him pulling your head down at all. Hands on his hips, elbows in.
 :::
 
@@ -168,7 +168,7 @@ angle, and turns your arm up behind your back.
 You tap before your shoulder does something you'll hear.
 
 @lose Submission: kimura from closed guard
-@learn Post a hand on the mat in Tomás' guard and he sits up for the kimura. Keep your hands on his hips.
+@learn Post a hand on the mat in Tomás' guard and he sits up for the [[kimura]]. Keep your hands on his hips.
 
 ## Four Fingers Deep {#p-deepcollar}
 @position Closed guard · top
@@ -218,7 +218,7 @@ Hips forward, back straight, head up, both hands on his hips, elbows tight to yo
 he can't reach your collar without sitting up, and every time he sits up you push him back down.
 
 He changes plans. His legs climb higher up your back. He grabs your right sleeve and starts fishing his
-left leg up toward your shoulder, looking for an overhook. You know that shape: omoplata, or triangle,
+left leg up toward your shoulder, looking for an overhook. You know that shape: [[omoplata]], or [[triangle]],
 or both.
 
 - [Kneeling guard break: knee in his tailbone, other leg back and wide, push his knee down](#p-kneelbreak)
@@ -235,7 +235,7 @@ a stalling penalty.
 On the restart he's more aggressive. His leg swings up and over your right shoulder while your arm is
 pinned to his hip, and he sits up and turns, hugging your waist.
 
-@learn If you sit still in Tomás' guard, he gets time to build an omoplata. Posture is not a plan; it's the start of one.
+@learn If you sit still in Tomás' guard, he gets time to build an [[omoplata]]. Posture is not a plan; it's the start of one.
 
 - [Omoplata!](#p-omoplata)
 
@@ -264,7 +264,7 @@ it. The pressure disappears; your arm comes out as you come over. Tomás scrambl
 time you're both upright you're back between his legs, and he's already locking his ankles again.
 
 :::coach
-The forward roll relieves an omoplata because you move with the pressure instead of against it. You're
+The forward roll relieves an [[omoplata]] because you move with the pressure instead of against it. You're
 back in his guard, but your shoulder still works.
 :::
 
@@ -280,7 +280,7 @@ At that exact moment your right arm is pushing his knee and your left arm is sti
 arm in, one arm out. His long leg shoots up over the back of your neck.
 
 :::coach
-Against a long-legged triangle player, the instant the guard opens with one of your arms forward and one
+Against a long-legged [[triangle]] player, the instant the guard opens with one of your arms forward and one
 back, the triangle is there.
 :::
 
@@ -304,7 +304,7 @@ He pulls your head down, locks his ankle behind his knee and pinches. His thigh 
 your neck, your own shoulder on the other. There's nothing you can do now but tap.
 
 @lose Submission: triangle choke
-@learn TRIANGLE | When Tomás' guard opens with one of your arms forward and one back, his triangle comes instantly. Keep both elbows in; if it's coming, stack him before it locks.
+@learn TRIANGLE | When Tomás' guard opens with one of your arms forward and one back, his [[triangle]] comes instantly. Keep both elbows in; if it's coming, stack him before it locks.
 
 ## The Stack {#p-tri-stack}
 @position Closed guard · top
@@ -315,7 +315,7 @@ back in to your ribs and your head slides free.
 
 He lets go and closes his guard again, relaxed as ever. You've survived, and you've learned something.
 
-@learn TRIANGLE | When Tomás' guard opens with one of your arms forward and one back, his triangle comes instantly. Keep both elbows in; if it's coming, stack him before it locks.
+@learn TRIANGLE | When Tomás' guard opens with one of your arms forward and one back, his [[triangle]] comes instantly. Keep both elbows in; if it's coming, stack him before it locks.
 
 - [Posture back up](#p-posture)
 
@@ -327,7 +327,7 @@ you're standing, and he's hanging from your waist. You drop your hips a few cent
 knee back, and gravity does the rest. His ankles slide apart.
 
 The instant they open, his hands shoot to both your sleeves and his feet plant into your biceps, legs
-extended like struts. Spider guard.
+extended like struts. [[Spider guard]].
 
 - [Deal with the spider guard](#p-spider)
 
@@ -336,7 +336,7 @@ extended like struts. Spider guard.
 
 He's got both your sleeves, feet in your biceps and his legs extended, and he's rocking you back and
 forth: pulling one arm, pushing the other, making you dance. At the end of those legs you're a puppet.
-Every pull is a triangle invitation.
+Every pull is a [[triangle]] invitation.
 
 - [Force a toreando pass while he still holds your sleeves](#p-spider-force)
 - [Break his grips first, one at a time](#p-gripbreak)
@@ -348,7 +348,7 @@ Every pull is a triangle invitation.
 You grab his pants and try to throw his legs to the side. But he still has your sleeves. He pulls your
 right arm in between his legs, pushes the left away and his leg flies over your neck.
 
-@learn SPIDER | Try to pass through Tomás' spider guard grips and he triangles you. Kill the sleeve grips before you pass.
+@learn SPIDER | Try to pass through Tomás' [[spider guard]] grips and he triangles you. Kill the sleeve grips before you pass.
 
 - [Triangle!](#p-triangle)
 
@@ -361,7 +361,7 @@ tears free. He reaches for it again, and while he does you do the same with your
 With his grips gone, his feet slip off your biceps. You grab his pants at both knees.
 
 :::coach
-Spider guard is only as strong as the sleeve grips. Break a grip by rotating your wrist against his
+[[Spider guard]] is only as strong as the sleeve grips. Break a grip by rotating your wrist against his
 thumb, the weakest part of any grip, and pulling your elbow back to your body.
 :::
 
@@ -373,7 +373,7 @@ thumb, the weakest part of any grip, and pulling your elbow back to your body.
 
 You drive your knee across his thigh and start to slice through. It's a pressure pass, and it's slow,
 and he's made of rubber bands. He turns in, gets his knee in front of your hip, and with those long legs
-simply swims back to closed guard.
+simply swims back to [[closed guard]].
 
 @learn Tomás' legs are too long and flexible for a slow knee slice. Pass fast, around his legs.
 
@@ -395,8 +395,8 @@ The referee holds up three fingers.
 ## Side Control {#p-side}
 @position Side control · top
 
-You're chest to chest, crossface, underhooking his far arm. But he isn't beaten. He frames on your neck
-and hip immediately and starts shrimping. A guard player lives to recover guard and he's already
+You're chest to chest, [[crossface]], underhooking his far arm. But he isn't beaten. He frames on your neck
+and hip immediately and starts [[shrimping]]. A guard player lives to recover guard and he's already
 looking for the space to swim a knee in.
 
 - [Stay heavy: crossface, underhook, hips low, follow his hips wherever they go](#p-heavy)
@@ -407,20 +407,20 @@ looking for the space to swim a knee in.
 @position Half guard · top
 
 You swing your leg over while his frames are still strong. His knee shoots up into your hip and traps
-your foot. He's got half guard, and ten seconds later, with a knee shield and a lot of wriggling, he's
-back to closed guard.
+your foot. He's got [[half guard]], and ten seconds later, with a knee shield and a lot of wriggling, he's
+back to [[closed guard]].
 
-@learn Tomás' frames are strong when he's fresh. Stay heavy in side control and wear him down before advancing.
+@learn Tomás' frames are strong when he's fresh. Stay heavy in [[side control]] and wear him down before advancing.
 
 - [Back in his guard, with a lead](#p-late-guard)
 
 ## Breathing Room {#p-relax}
 @position Closed guard · top
 
-You ease the pressure just for a second. That's all he needed. He shrimps, swims a knee through and a
+You ease the pressure just for a second. That's all he needed. He [[shrimps]], swims a knee through and a
 heartbeat later his legs are locked around your waist again.
 
-@learn Give Tomás a breath of space in side control and he recovers guard.
+@learn Give Tomás a breath of space in [[side control]] and he recovers guard.
 
 - [Back in his guard, with a lead](#p-late-guard)
 
@@ -428,7 +428,7 @@ heartbeat later his legs are locked around your waist again.
 @position Side control · top
 
 You stay heavy. Shoulder driving into his jaw, underhook tight, hips low and following his every
-shrimp. He works, and works, and slowly he starts to tire. Finally he frames on your neck with one
+[[shrimp]]. He works, and works, and slowly he starts to tire. Finally he frames on your neck with one
 long arm and pushes, straight-armed, trying to create space.
 
 - [Step up to knee on belly as he pushes](#p-kob)
@@ -468,7 +468,7 @@ bottom he'd never had to make before.
 @clock 1:20
 @position Closed guard · top
 
-He's back in closed guard with just over a minute to go, and you're ahead. He knows it too. He's
+He's back in [[closed guard]] with just over a minute to go, and you're ahead. He knows it too. He's
 throwing everything now: collar grips, overhooks, legs climbing your back.
 
 - [Posture up, hands on his hips, elbows in, and make him work through you until the buzzer](#p-late-posture)
@@ -480,7 +480,7 @@ throwing everything now: collar grips, overhooks, legs climbing your back.
 @penalty you Stalling
 
 You posture and fight his grips. You're not passing, and the referee knows it: a stalling penalty with
-thirty seconds left. But penalties only break ties. He throws a last triangle attempt; your elbows are
+thirty seconds left. But penalties only break ties. He throws a last [[triangle]] attempt; your elbows are
 in and it slides off your shoulder.
 
 - [Hold on](#p-decision)

@@ -7,7 +7,7 @@
 
 import { readFile } from 'node:fs/promises';
 import { join, resolve, basename } from 'node:path';
-import { buildPack, lintPack, parseFrontmatter, endingsOf } from '../js/parser.js';
+import { buildPack, lintPack, packFiles, parseFrontmatter, endingsOf } from '../js/parser.js';
 import { enterSection, startMatch, visibleChoices } from '../js/engine.js';
 
 const root = resolve(import.meta.dirname, '..');
@@ -16,7 +16,7 @@ async function loadFolder(dir) {
   const packText = await readFile(join(dir, 'pack.md'), 'utf8');
   const { meta } = parseFrontmatter(packText);
   const texts = {};
-  for (const f of meta.matches || []) {
+  for (const f of packFiles(meta)) {
     try { texts[f] = await readFile(join(dir, f), 'utf8'); } catch { /* reported by buildPack */ }
   }
   return buildPack(basename(dir), packText, texts);
@@ -94,7 +94,7 @@ async function main() {
         console.log(`  ${m.file} all codewords: ${fmt(simulate(pack, m, all))}`);
       }
     }
-    console.log(`  ${pack.sections.size} sections, ~${words} words`);
+    console.log(`  ${pack.sections.size} sections, ~${words} words${pack.techniques.list.length ? `, ${pack.techniques.list.length} techniques` : ''}`);
     if (problems.length) {
       failed = true;
       console.log(`  ✗ ${problems.length} problem(s):`);

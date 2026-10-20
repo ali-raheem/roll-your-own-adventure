@@ -2,7 +2,7 @@
 // per-pack progress persistence. Every storage access is guarded: private
 // windows and blocked storage must never break play.
 
-import { buildPack, parseFrontmatter } from './parser.js';
+import { buildPack, packFiles, parseFrontmatter } from './parser.js';
 
 // Historical prefix from when this was BJJ-only; changing it would orphan saved progress.
 const PREFIX = 'bjjcyoa:';
@@ -63,9 +63,8 @@ export async function loadPack(entry) {
     const base = entry.path.endsWith('/') ? entry.path : entry.path + '/';
     const packText = await fetchText(base + 'pack.md');
     const { meta } = parseFrontmatter(packText);
-    const files = Array.isArray(meta.matches) ? meta.matches : [];
     const texts = {};
-    await Promise.all(files.map(async (f) => {
+    await Promise.all(packFiles(meta).map(async (f) => {
       try { texts[f] = await fetchText(base + f); } catch (e) { console.warn(e); }
     }));
     pack = buildPack(entry.id, packText, texts);
@@ -86,7 +85,7 @@ export async function prefetchAll(entries) {
 
 /**
  * Import a pack from user-selected files. Needs a pack.md whose `matches:`
- * list names the other selected files.
+ * list (and `techniques:` file, if any) names the other selected files.
  */
 export async function importPackFiles(fileList) {
   const files = Array.from(fileList);
@@ -97,7 +96,7 @@ export async function importPackFiles(fileList) {
   const { meta } = parseFrontmatter(packText);
   const id = 'import-' + (meta.id || meta.title || 'pack').toLowerCase().replace(/[^a-z0-9]+/g, '-');
   const matches = {};
-  for (const f of meta.matches || []) {
+  for (const f of packFiles(meta)) {
     if (byName[f] == null) throw new Error(`pack.md lists "${f}" but it was not selected.`);
     matches[f] = byName[f];
   }

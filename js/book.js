@@ -56,6 +56,23 @@ function endingBlock(s, pack, nums) {
     <b>If you lost:</b> ${restart}</div>`;
 }
 
+// Printed books can't click through, so the library is printed with its URLs.
+function techniqueAppendix(pack) {
+  const list = pack.techniques.list.slice().sort((a, b) => a.title.localeCompare(b.title));
+  if (!list.length) return '';
+  return `
+    <section class="book-page book-techniques">
+      <h2>Technique library</h2>
+      ${renderMarkdown(pack.techniques.intro)}
+      ${list.map((t) => `
+        <article class="book-tech">
+          <h3>${h(t.title)}${t.aliases.length ? ` <span class="book-aka">(${h(t.aliases.join(', '))})</span>` : ''}</h3>
+          ${renderMarkdown(t.description)}
+          <ul>${t.links.map((l) => `<li>${inline(l.label)}: <a href="${h(l.url)}" target="_blank" rel="noopener">${h(l.url)}</a></li>`).join('')}</ul>
+        </article>`).join('')}
+    </section>`;
+}
+
 export function renderBook(pack, beltHtml) {
   const nums = bookNumbers(pack);
   const meta = pack.meta;
@@ -133,6 +150,8 @@ export function renderBook(pack, beltHtml) {
         <li><b>Codewords.</b> When you learn something about an opponent, write the codeword down. Codewords
         survive losses: some choices are only open to fighters who have done their scouting.</li>
         <li><b>Losing.</b> When you lose, clear the score table and start the match again. You keep what you learned.</li>
+        ${pack.techniques.list.length ? `<li><b>Techniques.</b> Underlined techniques are in the <b>Technique library</b> at the back
+        of this book, with links to videos and study pages.</li>` : ''}
       </ul>
       <p>Your tournament begins at <b>${nums.get(first.start)}</b>.</p>
     </section>
@@ -144,5 +163,6 @@ export function renderBook(pack, beltHtml) {
       <div class="medal" aria-hidden="true"><span>1</span></div>
       <p>${inline(meta.gold || 'Gold.')}</p>
     </section>
+    ${techniqueAppendix(pack)}
   </div>`;
 }

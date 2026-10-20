@@ -43,6 +43,7 @@ publishes the GitHub Pages mirror from `main`.
 | `js/book.js` | Printable gamebook (numbered paragraphs, scoresheet, codeword instructions) |
 | `css/style.css` | Shared layout and components incl. print CSS for the book; no sport looks |
 | `sw.js` | Service worker: network-first with cache fallback. Bump `VERSION` if you change the precache list. Only touches caches under its own `CACHE_PREFIX` and requests inside its scope (other apps share the origin) |
+| `packs/<id>/techniques.md` | Optional technique library; `packFiles()` in `parser.js` is the one list of files a pack loads (used by the store, import, validator and tests) |
 | `packs/index.json` | Lists bundled packs (also what the validator checks by default); `packs/<id>/pack.md` lists its match files. Pack files are not in the precache list: the service worker caches them as they are fetched |
 | `docs/WRITING_PACKS.md` | Authoring format reference (keep in sync with parser changes) |
 
@@ -53,7 +54,14 @@ All asset paths are relative so the app works under any subpath (it is served fr
 - Section: `## Title {#id}`. IDs are unique across the whole pack; prefix per match (`j-`, `p-`, `l-`).
 - Choice: `- [Label](#target)` optionally `{if CODEWORD}` / `{if !CODEWORD}`. Links stay within one match.
 - Directives: `@points you|them N reason`, `@advantage`, `@penalty`, `@clock m:ss`, `@position`,
-  `@learn [CODE |] text`, `@win text`, `@lose text`, `@decision`. `@score you|them <counter> N reason`
+  `@learn [CODE |] text`, `@win text`, `@lose text`, `@decision`.
+- Technique links: `[[name]]` or `[[name|shown text]]` in prose, resolved against the pack's optional
+  technique library (`techniques: techniques.md` in `pack.md`; `## Title {#id}`, `@also` aliases,
+  `- [Label](https://...)` links). Unknown names fail validation. Link sources: judo-derived techniques
+  use judo.acmiyaguchi.me/waza/<slug> plus its Kodokan YouTube video (the site's own `youtube_link`);
+  jiu-jitsu-only techniques use Bernardo Faria's channel (@BernardoFariaBJJ, including his guests);
+  fencing uses Coach Tyler's Fencer's Edge (@FencersEdge). Check each video's channel and title with
+  `https://www.youtube.com/oembed?format=json&url=<video url>` before adding it. `@score you|them <counter> N reason`
   targets any sport counter by id or alias; `@points`/`@advantage`/`@penalty` are shorthands by role.
 - Effects fire on entering a section. Decision = points, then advantages, then fewer penalties; full tie
   goes to the opponent. The clock auto-ticks `clock_tick` seconds per move (default 20, floor 0:10); `@clock` never runs it backwards.

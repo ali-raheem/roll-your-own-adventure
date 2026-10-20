@@ -93,7 +93,7 @@ off a reaction: a grip break, a step, a reach. Not from across the mat.
 
 You tuck: elbows to knees, chin down, making yourself a small hard ball.
 
-It is exactly what he wants. For a judoka, attacking the turtle is the heart of *ne-waza*, the thing
+It is exactly what he wants. For a judoka, attacking the [[turtle]] is the heart of *ne-waza*, the thing
 they drill every single session. His left hand slides in under your chin from behind and settles deep in
 your right collar, right next to your ear. His other arm threads under your armpit. Then he starts to
 walk his legs around your head, slowly, like the hand of a clock, putting his chest weight onto your
@@ -102,7 +102,7 @@ back and dragging the lapel tight across the side of your neck.
 Your tucked chin does nothing. The lapel isn't on your windpipe. It's on your carotid.
 
 @lose Submission: clock choke
-@learn Turtling against Darek is a disaster. He attacks a turtle like every judoka is drilled to: deep collar grip, then walk around for the clock choke. Never wait there.
+@learn Turtling against Darek is a disaster. He attacks a turtle like every judoka is drilled to: deep collar grip, then walk around for the [[clock choke]]. Never wait there.
 
 ## Granby Roll {#j-granby}
 @position Open guard · bottom
@@ -114,7 +114,7 @@ facing him on your back, feet up, and you grab his left sleeve before he can get
 He stands up, a little surprised, and starts fighting your legs.
 
 :::coach
-Granby rolls are the core guard-recovery movement from turtle. You traded a terrible position for an
+Granby rolls are the core guard-recovery movement from [[turtle]]. You traded a terrible position for an
 ordinary one. Take it.
 :::
 
@@ -129,7 +129,7 @@ strip his hand off and spin to face him.
 
 You're standing again. It cost you forty seconds and a lot of air, but you're standing.
 
-@learn Standing up out of turtle works when he has no hooks in. It burns time and air, but it's safe.
+@learn Standing up out of [[turtle]] works when he has no hooks in. It burns time and air, but it's safe.
 
 - [Reset and go again](#j-reset)
 
@@ -159,14 +159,14 @@ target. He pumps his collar grip down, once, twice, and you resist upward each t
 he spins, his back sliding into your chest, and drops onto both knees in front of you, yanking your
 sleeve over his shoulder.
 
-*Seoi otoshi.* Drop shoulder throw. Your bent-forward posture put your weight exactly where he needed it:
+*[[Seoi otoshi]].* Drop shoulder throw. Your bent-forward posture put your weight exactly where he needed it:
 over your toes. You go over his shoulder like a sack of rice and he follows you down, already settling.
 
 @points them 2 Takedown
-@learn DROP-SEOI | When you bend forward, Darek drops to his knees for seoi nage. He pumps the collar grip two or three times to load it. Stay upright and he has to turn his back to you to throw.
+@learn DROP-SEOI | When you bend forward, Darek drops to his knees for [[seoi nage]]. He pumps the collar grip two or three times to load it. Stay upright and he has to turn his back to you to throw.
 
 :::coach
-The bent-over defensive posture that stops a double leg is a gift to a judoka. Drop throws need your
+The bent-over defensive posture that stops a [[double leg]] is a gift to a judoka. Drop throws need your
 weight forward, and you just handed it over.
 :::
 
@@ -185,7 +185,7 @@ legs are just... standing there.
 
 :::coach
 Leg grabs have been banned in international judo for over a decade. Plenty of excellent modern judoka
-have spent years never having to defend a double leg.
+have spent years never having to defend a [[double leg]].
 :::
 
 - [As he reaches back in, drop your level and shoot a double leg](#j-double-timed) {if REACH}
@@ -218,7 +218,7 @@ You're a jiu-jitsu player: choose where the fight happens.
 You circle to your right, away from his collar hand, trying to drag him off balance.
 
 As your left foot slides past his, his right foot sweeps it, low and flat, at the exact moment your
-weight moves onto it. *De ashi barai.* It isn't even violent. Your foot simply isn't there anymore and
+weight moves onto it. *[[De ashi barai]].* It isn't even violent. Your foot simply isn't there anymore and
 the mat is coming up to meet your hip.
 
 @points them 2 Takedown
@@ -246,7 +246,7 @@ underneath a man who has been trained his whole life to pin people.
 You don't let him settle. Your left hand takes his right sleeve at the wrist, your right hand grabs his
 collar, and before he can break either grip you sit, pulling him onto you. Your feet go to his hips,
 then your legs wrap his waist and you cross your ankles behind his back. He lands on his knees in your
-closed guard.
+[[closed guard]].
 
 The referee's hand stays down. Legal guard pull, no points either way.
 
@@ -268,7 +268,7 @@ feet, shoulder in his hip, hands behind his knees. He's too upright to sprawl. H
 
 And then something happens you've seen a hundred times in judo highlights: in mid-air he twists and lands
 on his belly. Twenty years of judo taught him that landing on your back loses the match. You end up on
-top of his turtle, chest on his back. The referee waits a beat, then two fingers go up.
+top of his [[turtle]], chest on his back. The referee waits a beat, then two fingers go up.
 
 @points you 2 Takedown
 @learn TURTLE | When Darek is in trouble on the mat, he turns to his belly. In judo that avoids a pin; in jiu-jitsu it gives you his back.
@@ -280,7 +280,7 @@ top of his turtle, chest on his back. The referee waits a beat, then two fingers
 
 You let him have the collar grip. You stay tall, hips under your shoulders, belly tight.
 
-He pumps. You don't fold. He pumps again. Nothing. The third time he turns in for the drop seoi anyway,
+He pumps. You don't fold. He pumps again. Nothing. The third time he turns in for the [[drop seoi]] anyway,
 dropping to his knees with his back to your chest, but with your hips under you there's nothing for him
 to load. He's kneeling in front of you, back turned, still holding your sleeve.
 
@@ -288,7 +288,7 @@ You drop your weight onto his back, wrap one arm over his shoulder and one under
 your hands at his chest. He instantly turtles up.
 
 :::coach
-A failed seoi nage leaves a judoka on his knees with his back turned. In judo, the referee would call
+A failed [[seoi nage]] leaves a judoka on his knees with his back turned. In judo, the referee would call
 *matte* and stand you both up. In jiu-jitsu, nobody is coming to save him.
 :::
 
@@ -350,14 +350,14 @@ bump needs him upright with his weight coming toward you. Worse: to sit up you h
 shoves you flat, slides his knee over your thigh and walks straight into a pin.
 
 @points them 3 Guard pass
-@learn Darek sits heavy in your closed guard, knees wide, weight back. A hip bump won't move him.
+@learn Darek sits heavy in your [[closed guard]], knees wide, weight back. A hip bump won't move him.
 
 - [Brace yourself](#j-kesa)
 
 ## The Hopeful Armbar {#j-cg-armbar}
 @position Kesa gatame · bottom
 
-You swing your leg high for the armbar. He's a judoka: *juji gatame* is one of the first submissions
+You swing your leg high for the [[armbar]]. He's a judoka: *juji gatame* is one of the first submissions
 they teach, and escaping it is drilled just as hard. His elbow snaps to his ribs, he stacks you onto your
 shoulders, strips the arm out and walks around your legs while your hips are still in the air. He lands
 at your side, heavy.
@@ -402,7 +402,7 @@ rolls away onto his knees and elbows.
 @learn TURTLE | When Darek is in trouble on the mat, he turns to his belly. In judo that avoids a pin; in jiu-jitsu it gives you his back.
 
 :::coach
-A standing opponent in your guard is a sweep target: tall, narrow base, attention on your legs. Tripod
+A standing opponent in your guard is a sweep target: tall, narrow base, attention on your legs. [[tripod sweep|Tripod]]
 and sickle sweeps exist for exactly this.
 :::
 
@@ -419,7 +419,7 @@ ribs into your chest.
 Breathing is work now. This is the pin judoka practise every day of their lives.
 
 :::coach
-*Kesa gatame* (the scarf hold) is one of the oldest and strongest pins there is. It doesn't score extra
+*[[Kesa gatame]]* (the scarf hold) is one of the oldest and strongest pins there is. It doesn't score extra
 points here, but it drains your gas tank and it's a launch pad for armlocks on the arm you have left.
 Escapes from kesa are slow and technical. Explosive panic doesn't work.
 :::
@@ -440,7 +440,7 @@ way over his leg.
 You tap before it pops.
 
 @lose Submission: armlock from kesa gatame
-@learn Pushing Darek's head in kesa gatame hands him your free arm. He'll armlock it across his thigh.
+@learn Pushing Darek's head in [[kesa gatame]] hands him your free arm. He'll armlock it across his thigh.
 
 ## The Bridge {#j-kesa-bridge}
 @position Mount · bottom
@@ -453,13 +453,13 @@ forward leg posts way out to the side. You go nowhere. You try twice more. Your 
 But you notice it: every time you bridge, he posts that forward leg far out and his hips lift slightly
 off you. The space opens up on the *other* side, away from him.
 
-Then, bored of holding you, he steps his leg over your belly and climbs to mount.
+Then, bored of holding you, he steps his leg over your belly and climbs to [[mount]].
 
 @points them 4 Mount
-@learn KESA-POST | Every time you bridge in kesa gatame, Darek posts his forward leg far out and his hips lift. The space appears on the side away from him.
+@learn KESA-POST | Every time you bridge in [[kesa gatame]], Darek posts his forward leg far out and his hips lift. The space appears on the side away from him.
 
 :::coach
-Bridging with your arm still trapped almost never works against a good kesa. And you've just spent
+Bridging with your arm still trapped almost never works against a good [[kesa]]. And you've just spent
 energy you'll need later.
 :::
 
@@ -479,7 +479,7 @@ stairs. He grips your collar and starts testing the idea of a choke.
 @position Mount · bottom
 
 You shove both hands into his chest and push. He lets you straighten your arms, then catches one, swings
-his leg over your face and falls back. Juji gatame. Your arm is straight across his hips before you
+his leg over your face and falls back. [[Juji gatame]]. Your arm is straight across his hips before you
 realise what happened.
 
 @lose Submission: armbar from mount
@@ -489,14 +489,14 @@ realise what happened.
 @position Turtle · top
 
 You wrap his right arm to your chest with both hands, step your right foot over his right foot so he
-can't post it, and bridge up and over your left shoulder. The first mount escape every white belt learns,
+can't post it, and [[upa|bridge up and over your left shoulder]]. The first [[mount]] escape every white belt learns,
 and it works because he's sitting high and narrow.
 
 He rolls. And as he lands, the reflex fires again: he refuses to be flat on his back and spins onto his
-knees. You end up on top of his turtle.
+knees. You end up on top of his [[turtle]].
 
 :::rule
-Escaping mount with a bridge is not a sweep: sweeps only score when you start from guard or half guard.
+Escaping mount with a bridge is not a sweep: sweeps only score when you start from guard or [[half guard]].
 No points, but a much better position.
 :::
 
@@ -514,7 +514,7 @@ work. Then it slides free.
 Now you have both arms, and his headlock has no arm to control.
 
 :::coach
-Rule one in kesa gatame: get your trapped arm back. Until you do, every escape is one-armed and every
+Rule one in [[kesa gatame]]: get your trapped arm back. Until you do, every escape is one-armed and every
 movement feeds him.
 :::
 
@@ -552,10 +552,10 @@ his shoulder is jammed across your jaw, head low, chest on your chest. You're fl
 @position Kesa gatame · bottom
 
 He shoves his shoulder harder into your jaw, turns your face away from him and walks his trapped knee
-free with the other foot. Three seconds later he's past, sitting in kesa again.
+free with the other foot. Three seconds later he's past, sitting in [[kesa]] again.
 
 @points them 3 Guard pass
-@learn Flat on your back in half guard against Darek, you lose. Get onto your side and get an underhook.
+@learn Flat on your back in [[half guard]] against Darek, you lose. Get onto your side and get an underhook.
 
 - [Back in kesa gatame](#j-kesa)
 
@@ -575,7 +575,7 @@ arm, and suddenly you're at his back as he sits to stop you. A seated man's back
 @position Turtle · top
 
 He's belly down, elbows tight to his knees, chin tucked, both hands gripping his own lapels. In judo,
-turtle is a waiting room: hold on and the referee stands you up. There is no *matte* coming today.
+[[turtle]] is a waiting room: hold on and the referee stands you up. There is no *matte* coming today.
 
 - [Flatten him out and work to pass to side control](#j-flatten)
 - [Seatbelt, chest glued to his back, and slide your hooks in as he moves](#j-hooks)
@@ -587,7 +587,7 @@ turtle is a waiting room: hold on and the referee stands you up. There is no *ma
 You drive your weight forward to flatten him out. He responds like a judoka: when pinning pressure
 arrives, get up. He explodes to his feet, strips your hands and turns to face you.
 
-@learn When you pressure Darek's turtle, he stands up. From the top of his turtle, hooks beat pressure.
+@learn When you pressure Darek's [[turtle]], he stands up. From the top of his turtle, hooks beat pressure.
 
 - [Back on the feet](#j-reset)
 
@@ -598,14 +598,14 @@ You feed his collar and start walking around. He knows exactly what this is; he'
 people. He pins your choking hand to his shoulder, rolls toward it and takes you with him. You end up on
 your back with him kneeling in your guard.
 
-@learn You can't catch Darek with a clock choke. He knows it better than you do.
+@learn You can't catch Darek with a [[clock choke]]. He knows it better than you do.
 
 - [Work from closed guard](#j-closedguard)
 
 ## Hooks In {#j-hooks}
 @position Back control
 
-Seatbelt: one arm over his shoulder, one under his armpit, hands clasped at his chest. You keep your
+[[Seatbelt]]: one arm over his shoulder, one under his armpit, hands clasped at his chest. You keep your
 chest glued to his back. He tries to stand, the same judo reflex, and when his hips lift you slide your
 first hook in, then the second, and fall to your side, taking him with you.
 
@@ -616,7 +616,7 @@ first hook in, then the second, and fall to your side, taking him with you.
 ## Back Control {#j-back}
 @position Back control
 
-Both hooks in, seatbelt locked. He's defending the way only a judoka can: both hands guarding his
+Both hooks in, [[seatbelt]] locked. He's defending the way only a judoka can: both hands guarding his
 collars, chin buried, elbows welded to his ribs. Chokes are half of judo ground work. He's not going to
 make this easy.
 
@@ -646,7 +646,7 @@ Against a tucked chin, the gi gives you better options than the rear naked. Use 
 
 You cross your ankles over his belly. Darek instantly lays his leg across your crossed ankles and
 pushes down. White-hot pain flares through your ankle and you uncross. With your hooks loose, he slides
-his shoulders to the mat, turns into you and ends up on top in your closed guard.
+his shoulders to the mat, turns into you and ends up on top in your [[closed guard]].
 
 You keep the points you scored, but you've lost the back.
 
@@ -658,7 +658,7 @@ You keep the points you scored, but you've lost the back.
 @clock 0:40
 @position Closed guard · bottom
 
-Forty seconds left. He's in your closed guard, desperate, fists in your lapels.
+Forty seconds left. He's in your [[closed guard]], desperate, fists in your lapels.
 
 - [Break his posture and keep him tied up until the buzzer](#j-decision)
 - [Go for the armbar to finish it](#j-cg-armbar)
@@ -666,7 +666,7 @@ Forty seconds left. He's in your closed guard, desperate, fists in your lapels.
 ## Bow and Arrow {#j-bowarrow}
 @position Back control
 
-Your top hand slides deep into his far collar, thumb inside. Your other hand lets go of the seatbelt
+Your top hand slides deep into his far collar, thumb inside. Your other hand lets go of the [[seatbelt]]
 and grabs his pant leg at the knee. You drop to your side, swing your leg over his shoulder to pin him
 down, and stretch: collar one way, pant leg the other, his body bent like a bow.
 
@@ -676,7 +676,7 @@ and then his hand slaps your leg twice.
 @win submission: bow and arrow choke
 
 :::coach
-The bow and arrow is one of the strongest chokes in gi jiu-jitsu, and it's strongest exactly when
+The [[bow and arrow]] is one of the strongest chokes in gi jiu-jitsu, and it's strongest exactly when
 someone buries their chin. You beat a judo black belt by refusing to play judo. That's the lesson.
 :::
 

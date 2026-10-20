@@ -8,7 +8,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { buildPack, parseFrontmatter, lintPack } from '../js/parser.js';
+import { buildPack, packFiles, parseFrontmatter, lintPack, findTechnique, parseTechniques } from '../js/parser.js';
 import { enterSection, startMatch, visibleChoices, endingHeadline } from '../js/engine.js';
 import { resolveSport } from '../js/sports/index.js';
 import { firstTo, leadBy, limitLoses, emptyScore, scoreLine } from '../js/sports/common.js';
@@ -19,7 +19,7 @@ async function load(id) {
   const dir = join(root, 'packs', id);
   const packText = await readFile(join(dir, 'pack.md'), 'utf8');
   const texts = {};
-  for (const f of parseFrontmatter(packText).meta.matches) texts[f] = await readFile(join(dir, f), 'utf8');
+  for (const f of packFiles(parseFrontmatter(packText).meta)) texts[f] = await readFile(join(dir, f), 'utf8');
   return buildPack(id, packText, texts);
 }
 
@@ -136,4 +136,26 @@ test('parser: @score resolves counters by id, role or alias; unknown counters ar
   const fx = pack.sections.get('a').effects;
   assert.deepEqual(fx.map((f) => f.counter), ['pts', 'pen', null]);
   assert.ok(pack.errors.some((e) => /no "advantage" counter/.test(e)));
+});
+
+test('techniques: lookups by id, title or alias; refs are checked; choice labels drop the link', () => {
+  const lib = '## Seoi nage {#seoi-nage}\n@also shoulder throw\nOver the back.\n- [Page](https://example.com/seoi)\n- [Video](https://youtu.be/x)\n' +
+    '## Kesa {#kesa}\n@also Shoulder Throw\nNo links here.\n';
+  const pack = buildPack('t', '---\nmatches:\n  - m.md\ntechniques: t.md\n---\nSee [[seoi nage]].\n', {
+    't.md': lib,
+    'm.md': '## A {#a}\nA [[Shoulder throw|big throw]] and a [[harai goshi]].\n- [Try [[seoi-nage]]](#b)\n## B {#b}\n@win done\n',
+  });
+  assert.equal(findTechnique(pack, 'Seoi Nage').links[1].url, 'https://youtu.be/x');
+  assert.equal(findTechnique(pack, 'shoulder-throw').id, 'seoi-nage');
+  assert.equal(findTechnique(pack, 'harai goshi'), null);
+  assert.equal(pack.sections.get('a').choices[0].label, 'Try seoi-nage');
+  assert.ok(pack.errors.some((e) => /m\.md:2: technique "harai goshi" is not in the technique library/.test(e)));
+  assert.ok(pack.errors.some((e) => /"kesa" has no links/.test(e)));
+  assert.ok(pack.errors.some((e) => /"Shoulder Throw" already names technique "seoi-nage"/.test(e)));
+  assert.equal(parseTechniques('Intro.\n## X {#x}\n@clock 1:00\n- [L](https://e.com)\n').errors.length, 1);
+});
+
+test('techniques: a ref without a technique file is an error', () => {
+  const pack = buildPack('t', '---\nmatches:\n  - m.md\n---\n', { 'm.md': '## A {#a}\n[[armbar]]\n@win done\n' });
+  assert.ok(pack.errors.some((e) => /no "techniques:" file/.test(e)));
 });

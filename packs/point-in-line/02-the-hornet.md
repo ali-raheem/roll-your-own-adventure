@@ -14,7 +14,7 @@ blurb: Twenty-one years old. Has never walked anywhere in his life.
 ---
 
 Luca won his quarterfinal 15–6 in four and a half minutes. You timed it. Most of his touches came from
-flèches: a sprint, a hit, a scream of *"Allez!"* loud enough to make the fencers on the next piste
+[[flèches]]: a sprint, a hit, a scream of *"Allez!"* loud enough to make the fencers on the next piste
 flinch. Between touches he bounces on his toes like he's waiting to cross a road.
 
 He's short for an épéeist, and fast in a way you can't really prepare for. His coach doesn't coach him so
@@ -51,7 +51,7 @@ the whole bout is going to be like this.
 @points them 4 He was first
 @position Period 1 · middle distance
 
-You stop-hit at his arm as he flies in. Double. Double. Then twice his lamp is on alone: he's just a
+You [[stop-hit]] at his arm as he flies in. Double. Double. Then twice his lamp is on alone: he's just a
 fraction faster, and his arm is out before yours.
 
 :::coach
@@ -69,12 +69,12 @@ touches with you all day, because he scores more of them.
 @position Period 1 · middle distance
 
 You plant your feet and parry, sweeping your blade across to knock his aside. The first time, it works
-and you riposte. After that, he feints to one side, lets your parry sweep past, and hits on the other side:
+and you riposte. After that, he [[feints]] to one side, lets your parry sweep past, and hits on the other side:
 a *one-two*. Your parry is always one tempo behind his second movement.
 
 :::coach
 A lateral parry covers one line at a time. A compound attack like a one-two is built to deceive exactly
-that. Against someone this fast, distance is a better parry than your blade.
+that. Against someone this fast, [[distance]] is a better parry than your blade.
 :::
 
 @learn Luca's one-two deceives a side-to-side parry. Use distance, or a circular parry.
@@ -86,8 +86,8 @@ that. Against someone this fast, distance is a better parry than your blade.
 @points them 1 He adjusted once
 @position Period 1 · middle distance
 
-When he launches, you don't parry and you don't counter. You take one quick extra step back. His flèche
-is built for the distance you *were* at, and it lands a hand's width short, his arm fully extended and
+When he launches, you don't parry and you don't counter. You take one quick extra [[step back]]. His [[flèche]]
+is built for the [[distance]] you *were* at, and it lands a hand's width short, his arm fully extended and
 his balance gone. You hit his forearm as he lands.
 
 You do it three times. The fourth time he stops short on purpose and catches your mask as you come
@@ -108,10 +108,10 @@ no time to recover. That's the moment you riposte.
 @position Period 1 · middle distance
 
 You try to take the initiative and attack. It turns out he doesn't mind being attacked either. He
-counterattacks straight into your preparation, arm out while yours is still bending. His lamp. His lamp. His
+[[counterattacks]] straight into your preparation, arm out while yours is still bending. His lamp. His lamp. His
 lamp. His lamp.
 
-@learn Attacking Luca from distance gives him a target to counter. He's just as fast going backwards.
+@learn Attacking Luca from [[distance]] gives him a target to counter. He's just as fast going backwards.
 
 - [Keep fencing](#n-p1b)
 
@@ -131,8 +131,8 @@ at all.
 @points them 1 A remise
 @position Period 1 · middle distance
 
-You give him the same distance as before, then take it away. He falls short. You hit him. He launches
-again, a little longer; you retreat a little further. He's always a little short. Four times the red
+You give him the same [[distance]] as before, then take it away. He falls short. You hit him. He launches
+again, a little longer; you [[retreat]] a little further. He's always a little short. Four times the red
 lamp comes on, and he stops yelling.
 
 - [To the break](#n-break)
@@ -148,7 +148,7 @@ quick, and hits before your circle finishes.
 
 :::coach
 A circular parry covers the line he's deceiving into. It's the classic answer to a one-two, and it's
-slower than a straight parry, so give yourself distance for it.
+slower than a straight parry, so give yourself [[distance]] for it.
 :::
 
 - [To the break](#n-break)
@@ -158,7 +158,7 @@ slower than a straight parry, so give yourself distance for it.
 @points them 3 Parry-ripostes on your flèche
 @position Period 1 · middle distance
 
-You flèche at him. He looks almost delighted. He parries you in the air as you run past, ripostes onto
+You [[flèche]] at him. He looks almost delighted. He parries you in the air as you run past, ripostes onto
 your back before you've gone by, and yells.
 
 :::rule
@@ -176,7 +176,7 @@ too late.
 @position Period 1 · middle distance
 
 You stop trying to win exchanges and just watch him. It costs you three touches. But you see it: before
-every flèche, his front foot taps the piste, a tiny stamp, an *appel*, as he gathers himself to launch.
+every [[flèche]], his front foot taps the piste, a tiny stamp, an *appel*, as he gathers himself to launch.
 Every single time.
 
 @learn APPEL | Before every flèche, Luca taps his front foot (an appel). When you hear it, the flèche is coming half a second later.
@@ -189,7 +189,7 @@ Every single time.
 You drop onto the stool. Luca is doing star jumps at his end.
 
 Maître Colette crouches next to you. "You see? The hornet has only one idea. But he is not stupid. Next
-period, he will try to catch your feet when you step back. Stay light."
+period, he will try to catch your feet when you [[step back]]. Stay light."
 
 - [Mask up for period two](#n-p2)
 
@@ -197,8 +197,8 @@ period, he will try to catch your feet when you step back. Stay light."
 @clock 3:00 reset
 @position Period 2 · middle distance
 
-He's changed his rhythm. Now he comes forward in short bursts and sometimes, instead of the full flèche,
-drops his point to your front foot as you retreat. He's hunting your feet.
+He's changed his rhythm. Now he comes forward in short bursts and sometimes, instead of the full [[flèche]],
+drops his point to your front foot as you [[retreat]]. He's hunting your feet.
 
 - [Listen for his appel. When it comes, step back and parry, then riposte](#n-appel) {if APPEL}
 - [Retreat and parry whatever comes](#n-retreat)
@@ -210,7 +210,7 @@ drops his point to your front foot as you retreat. He's hunting your feet.
 @points them 1 A low attack to your foot
 @position Period 2 · middle distance
 
-*Tap.* You're already stepping back. His flèche arrives exactly where you're expecting it, and your
+*Tap.* You're already stepping back. His [[flèche]] arrives exactly where you're expecting it, and your
 parry takes his blade and ripostes to his shoulder. *Tap.* Again. The only time he scores is when he
 skips the appel and goes low to your foot instead.
 
@@ -225,7 +225,7 @@ A tell like that is gold. Good fencers hide theirs; young fast ones often don't 
 @points them 4 Foot touches as you retreated
 @position Period 2 · middle distance
 
-You retreat and parry. Your blade is ready for his blade, but he isn't aiming for it. He drops his point
+You [[retreat]] and parry. Your blade is ready for his blade, but he isn't aiming for it. He drops his point
 to your front foot as it lifts off the piste to step back. Toe. Toe. Knee. Toe again.
 
 @learn When you retreat predictably, Luca goes for your front foot. Retreat with purpose, not by reflex.
@@ -247,7 +247,7 @@ Three times he's quicker than you think and already launched.
 @points them 4 First again
 @position Period 2 · middle distance
 
-You counterattack. He's still faster. Doubles, and a few that are all his.
+You [[counterattack]]. He's still faster. Doubles, and a few that are all his.
 
 - [Period three](#n-p3)
 
@@ -255,7 +255,7 @@ You counterattack. He's still faster. Doubles, and a few that are all his.
 @clock 3:00 reset
 @position Period 3 · middle distance
 
-Last period and he knows it. He's back to full-speed flèches, one after another, and on the second
+Last period and he knows it. He's back to full-speed [[flèches]], one after another, and on the second
 one he doesn't stop: he crashes straight into you, masks clanking.
 
 - [Stand your ground and let the referee deal with his charging](#n-hold)
@@ -285,7 +285,7 @@ do it again and it's a red card, which gives the other fencer a touch.
 @points them 1 A remise
 @position Period 3 · middle distance
 
-He's tired now, and tired attacks are even shorter. You give him a distance, take it away, and hit him
+He's tired now, and tired attacks are even shorter. You give him a [[distance]], take it away, and hit him
 as he lands. He has nothing else.
 
 - [The final minute](#n-last)
@@ -323,7 +323,7 @@ One minute. Luca is bouncing again. Maître Colette is holding her eyebrows very
 @points them 2 Flèche
 @position Period 3 · final minute
 
-You hold your distance. He comes, of course; he'd come even if he were ahead. He scores twice; you get one back.
+You hold your [[distance]]. He comes, of course; he'd come even if he were ahead. He scores twice; you get one back.
 
 - [The buzzer](#n-time)
 

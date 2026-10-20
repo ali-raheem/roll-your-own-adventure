@@ -10,6 +10,7 @@ packs/
     pack.md                pack front matter + intro text
     01-first-opponent.md   one file per match, in bracket order
     02-second-opponent.md
+    techniques.md          optional technique library (videos and study links)
 ```
 
 To bundle a pack, add it to `packs/index.json`:
@@ -19,7 +20,7 @@ To bundle a pack, add it to `packs/index.json`:
 ```
 
 You can also try a pack without touching the site: on the home screen, use **Import pack files** and
-select `pack.md` together with its match files. Imported packs are stored only in that browser.
+select `pack.md` together with its match files (and its technique file, if it has one). Imported packs are stored only in that browser.
 
 Run the validator after every edit:
 
@@ -28,8 +29,8 @@ node tools/validate.mjs                  # every pack in index.json
 node tools/validate.mjs packs/my-pack    # one folder
 ```
 
-It reports broken links, dead ends, unreachable sections, matches with no way to win, and codewords
-that are required but never taught.
+It reports broken links, dead ends, unreachable sections, matches with no way to win, codewords
+that are required but never taught, and technique links the library doesn't know.
 
 ## pack.md
 
@@ -46,6 +47,7 @@ gold: Text shown on the podium screen after winning the final.
 matches:
   - 01-the-judoka.md
   - 02-the-python.md
+techniques: techniques.md  # optional, see "Technique links"
 ---
 
 Intro markdown: the event, the ruleset, anything the reader needs before match one.
@@ -175,6 +177,41 @@ Kinds: `coach`, `rule`, `note`, `danger`, `scout`. Add a custom title after the 
 
 Other supported markdown: paragraphs, `**bold**`, `*italic*`, `` `code` ``, `###` headings, lists,
 `>` quotes and `---`. Raw HTML is escaped, never rendered.
+
+### Technique links
+
+Write `[[seoi nage]]` anywhere in a pack's prose (section text, callouts, intros, blurbs, `@learn`
+notes) and the player can tap it to see that technique's description and links: a study page, a
+video, an escapes page. Use `[[seoi nage|his favourite throw]]` to show different words. The printed
+book underlines them and prints every link in a **Technique library** appendix, and the pack's
+bracket screen gets a Technique library page.
+
+The links live in one file per pack, named by `techniques:` in `pack.md`:
+
+```markdown
+Optional intro, shown at the top of the library page. Good for general links.
+
+## Seoi nage {#seoi-nage}
+@also shoulder throw, drop seoi
+
+The shoulder throw. One or two sentences of markdown.
+
+- [Technique page](https://judo.acmiyaguchi.me/waza/seoi-nage)
+- [Kodokan video](https://youtu.be/zIq0xI0ogxk)
+```
+
+- A link matches an entry by its id, its title or any `@also` name. Case, accents and punctuation are
+  ignored, so `[[Seoi-Nage]]` and `[[seoi nage]]` are the same. Add plurals you write in the prose
+  (`armbars`) as `@also` names.
+- Every entry needs at least one `- [Label](https://...)` link; the first is shown as the main one.
+- For judo techniques (and the many jiu-jitsu techniques that are judo under another name), prefer the
+  page on [judo.acmiyaguchi.me](https://judo.acmiyaguchi.me/waza) and its matching video from the
+  [Kodokan waza series](https://www.youtube.com/watch?v=_GxcFx8LZRk&list=PLtz539PTepc16H2iu5F3Q3D7_He1EYlIQ).
+  For jiu-jitsu-only techniques, use [Bernardo Faria's channel](https://www.youtube.com/@BernardoFariaBJJ);
+  for fencing, Coach Tyler's [Fencer's Edge](https://www.youtube.com/@FencersEdge).
+- Link a technique the first time it comes up in a section, not every time.
+- Choice labels are buttons, so a link there shows as plain text. `@position`, `@win` and `@lose`
+  text can't hold links; the validator says so.
 
 ## Designing a good match
 

@@ -41,7 +41,7 @@ closes the notebook and gives it to his coach.
 
 He comes forward in measured steps, and halfway across the piste he throws a half-lunge at your arm. It
 stops short, deliberately. Then another. Each time his blade is in exactly the right place for a parry,
-if you happen to counterattack.
+if you happen to [[counterattack]].
 
 - [Counterattack his arm when he half-lunges](#f-bait)
 - [Hit his toe the way you did against Henrik](#f-toe) {if FOOT}
@@ -59,7 +59,7 @@ yours. He parries your counter, sweeping it out of line, and ripostes to your sh
 movement. Again. Again. Again. You get through once, when he's a fraction slow.
 
 :::coach
-That's *second intention*: a false attack designed to draw your counterattack, so he can parry it and
+That's *second intention*: a false attack designed to draw your [[counterattack]], so he can parry it and
 riposte. The action he showed you was only there to make you move.
 :::
 
@@ -97,7 +97,7 @@ hitting air while he hits your forearm. He's seen this one too.
 @position Period 1 · middle distance
 
 You don't react. His half-lunges fall short, and you don't bite. He tries a slightly longer one, and you
-retreat half a step and let it die in the air. He looks at you for a moment through his mask.
+[[retreat]] half a step and let it die in the air. He looks at you for a moment through his mask.
 
 Then, twice, one of the half-lunges turns into a full one, and he scores. You catch him once coming too close.
 
@@ -132,7 +132,7 @@ He comes back to his line, completely calm. The same measured steps, the same qu
 @points them 1 A real attack
 @position Period 1 · middle distance
 
-He half-lunges. You start a counterattack, but only half-heartedly, your arm only half extended, and he
+He half-lunges. You start a [[counterattack]], but only half-heartedly, your arm only half extended, and he
 takes the bait you're offering: his parry sweeps across to collect your blade. It isn't there. You've
 already dropped your point around his parry and extended to his arm, while his blade is still busy with
 the space you left.
@@ -170,7 +170,7 @@ guess, and that's a much worse game for him.
 @points them 4 Parry-ripostes
 @position Period 1 · middle distance
 
-Faster doesn't matter. His half-lunge is still a false attack, and a faster counterattack just finds his
+Faster doesn't matter. His half-lunge is still a false attack, and a faster [[counterattack]] just finds his
 waiting parry sooner.
 
 @learn BAIT | Aurélien's half-lunges are false attacks. He wants your counterattack so he can parry and riposte. Don't take the bait.
@@ -182,7 +182,7 @@ waiting parry sooner.
 @points them 2 Doubles
 @position Period 1 · middle distance
 
-You counterattack everything and the lamps flash together. It isn't what he wants, but it isn't what
+You [[counterattack]] everything and the lamps flash together. It isn't what he wants, but it isn't what
 you want either. Both scores tick up.
 
 - [To the break](#f-break)
@@ -202,7 +202,7 @@ your answers. The next period he will ask different questions. Keep changing you
 @position Period 2 · middle distance
 
 He's adjusted. Now he mixes real attacks and false ones, and you can't tell them apart from the first
-movement. Sometimes the half-lunge becomes a full lunge. Sometimes the full lunge stops dead.
+movement. Sometimes the half-lunge becomes a full [[lunge]]. Sometimes the full lunge stops dead.
 
 - [Break the rhythm again: stillness, then a sudden fast attack](#f-rhythm2) {if TEMPO}
 - [Fake a counterattack and deceive his parry again](#f-third2) {if BAIT}
@@ -225,7 +225,7 @@ arranging it. Four times.
 @points them 2 He parried late instead
 @position Period 2 · middle distance
 
-You fake the counterattack again. It works, but he's learning: twice he waits on the parry instead of
+You fake the [[counterattack]] again. It works, but he's learning: twice he waits on the parry instead of
 sweeping early, and catches your real attack with it.
 
 - [Period three](#f-p3)
@@ -286,8 +286,8 @@ back with a real attack of his own.
 @points them 4 Parried in the air
 @position Period 3 · middle distance
 
-You throw yourself at him. He takes one step back, parries you in the air and ripostes as you pass. He
-has seen flèches before.
+You throw yourself at him. He takes one [[step back]], parries you in the air and ripostes as you pass. He
+has seen [[flèches]] before.
 
 - [The final minute](#f-last)
 
@@ -324,7 +324,7 @@ you've done all day, and your point lands on his wrist. Again, with ten seconds 
 @points them 2 He found the moment you relaxed
 @position Period 3 · final minute
 
-You hold your distance. Twice, he finds the moment you relax.
+You hold your [[distance]]. Twice, he finds the moment you relax.
 
 - [The buzzer](#f-time)
 

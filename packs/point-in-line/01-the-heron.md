@@ -18,7 +18,7 @@ with his arm almost straight and his point floating at his opponent's wrist, and
 fencer came forward, the green lamp lit up. His opponent looked exhausted. Henrik looked bored.
 
 He fences with a French grip, the long straight handle held near the pommel, which adds a few more
-centimetres to a reach that didn't need them. And he's left-handed, so everything you drill against
+centimetres to a reach that didn't need them. And he's [[left-handed]], so everything you drill against
 right-handers is the wrong way round.
 
 Maître Colette plugs in your body wire. "He will wait," she says. "He is a heron. He stands in the
@@ -58,7 +58,7 @@ exclusion from the whole tournament. The referee just saved your day.
 *En garde. Prêts? Allez!*
 
 Henrik doesn't move. He settles on his line with his arm three quarters extended, point floating level
-with your wrist. You're a full lunge away, and his point is already in your space.
+with your wrist. You're a full [[lunge]] away, and his point is already in your space.
 
 - [Explode into a long lunge at his chest](#h-lunge)
 - [Stay out of distance and fish for his wrist with little extensions](#h-fish)
@@ -70,7 +70,7 @@ with your wrist. You're a full lunge away, and his point is already in your spac
 @points them 4 Stop-hits to your arm
 @position Period 1 · long distance
 
-You launch. It's a beautiful lunge, fully extended, the kind Maître Colette makes you drill until your
+You launch. It's a beautiful [[lunge]], fully extended, the kind Maître Colette makes you drill until your
 thighs shake. And halfway there his green lamp is already on. His point has landed on your forearm,
 inside your bell guard, and your blade arrives a clear beat later.
 
@@ -79,7 +79,7 @@ waiting for your arm.
 
 :::coach
 Épée has no right of way. Against a long reach, a long attack gives him the whole length of your arm to
-hit before your point arrives. His *stop-hit* on your wrist isn't a counterattack in time. It's just
+hit before your point arrives. His *[[stop-hit]]* on your wrist isn't a counterattack in time. It's just
 closer.
 :::
 
@@ -92,7 +92,7 @@ closer.
 @points them 3 Wrist, longer reach
 @position Period 1 · long distance
 
-You stay out of distance and fish: little extensions at his wrist, toes on the edge of range. He fishes
+You stay out of [[distance]] and fish: little extensions at his wrist, toes on the edge of range. He fishes
 back. It's the most épée thing in the world and it's a game of centimetres, and he has twenty more of
 them than you do.
 
@@ -121,7 +121,7 @@ A point in line is a wall, and a beat is a door in it. Knock his point away and 
 nothing between your point and his arm.
 :::
 
-@learn LINE | Henrik holds his point in line. Take his blade (a beat, or better a bind) and his counterattack disappears.
+@learn LINE | Henrik holds his point in line. Take his blade (a beat, or better a bind) and his [[counterattack]] disappears.
 
 - [Keep fencing](#h-p1b)
 
@@ -160,7 +160,7 @@ fencing a lighthouse.
 @points them 3 Stop-hits on your flèche
 @position Period 1 · middle distance
 
-You launch off your front foot and run at him, arm extended. Henrik takes one long step back. Your flèche
+You launch off your front foot and run at him, arm extended. Henrik takes one long [[step back]]. Your [[flèche]]
 was built for someone standing still, and now you're running into empty air with your arm out, straight
 onto his point. His lamp lights up while you're still in the air, and you go past him with your blade
 nowhere near anything.
@@ -172,7 +172,7 @@ A flèche commits your whole body. Against a tall, patient fencer who retreats, 
 onto his point.
 :::
 
-@learn Flèche at Henrik from middle distance and he steps back and stop-hits you while you're still in the air.
+@learn Flèche at Henrik from middle [[distance]] and he steps back and [[stop-hits]] you while you're still in the air.
 
 - [To the break](#h-break)
 
@@ -181,11 +181,11 @@ onto his point.
 @points them 1 Double
 @position Period 1 · his warning zone
 
-You walk him down the piste, one step at a time, point threatening his hand so he has to keep retreating.
+You walk him down the piste, one step at a time, point threatening his hand so he has to keep [[retreating]].
 He glances down as his back foot reaches the warning zone, the last two metres before his end line.
 
-Then the heron changes. With nowhere left to go, he stops waiting and launches a long, committed lunge. It
-surprises you so much you just counterattack, and both lamps flash: double.
+Then the heron changes. With nowhere left to go, he stops waiting and launches a long, committed [[lunge]]. It
+surprises you so much you just [[counterattack]], and both lamps flash: double.
 
 But you saw it. At the back of the piste, he attacks. One big, predictable lunge.
 
@@ -226,7 +226,7 @@ point-in-line fencer can deceive a beat. It's much harder to deceive a blade tha
 @points them 1 Wrist
 @position Period 1 · middle distance
 
-You wait at the edge of distance. His front foot slides forward, and plants. Before his arm finishes
+You wait at the edge of [[distance]]. His front foot slides forward, and plants. Before his arm finishes
 extending, you drop your point low and fast onto his toe. Red lamp. The referee nods.
 
 He tries to take your wrist the next time too, and you do it again. He gets your wrist once when you go
@@ -246,7 +246,7 @@ The buzzer. You walk to the end of the piste, unmask and take a drink. Maître C
 word for thirty seconds. Then she looks at the scoreboard, at Henrik, and back at you.
 
 "He has changed nothing," she says. "So he thinks he is winning. Next period he will come to you a
-little, to steal distance. When a heron steps, he is standing on one leg."
+little, to steal [[distance]]. When a heron steps, he is standing on one leg."
 
 - [Mask up for period two](#h-p2)
 
@@ -254,7 +254,7 @@ little, to steal distance. When a heron steps, he is standing on one leg."
 @clock 3:00 reset
 @position Period 2 · middle distance
 
-She was right. Henrik is stepping forward now, small gliding steps, stealing distance, trying to pin
+She was right. Henrik is stepping forward now, small gliding steps, stealing [[distance]], trying to pin
 you near your own end of the piste. Each step brings his point closer to your wrist.
 
 - [Counterattack his wrist every time he steps forward](#h-p2-counter)
@@ -267,7 +267,7 @@ you near your own end of the piste. Each step brings his point closer to your wr
 @points them 2 Doubles
 @position Period 2 · middle distance
 
-You counter to his wrist as he steps. He's counterattacking too, and nobody is first by a twenty-fifth
+You counter to his wrist as he steps. He's [[counterattacking]] too, and nobody is first by a twenty-fifth
 of a second: double, double. Both lamps, both scores.
 
 :::coach
@@ -284,13 +284,13 @@ When you're behind, every double is time you don't have.
 @points them 1 Remise
 @position Period 2 · middle distance
 
-You wait for his front foot to lift, and *go*. While his foot is in the air he can't retreat and his arm
+You wait for his front foot to lift, and *go*. While his foot is in the air he can't [[retreat]] and his arm
 is still bent. Your point lands on his forearm before his foot does. Four times this period you catch
 him stepping; once he remises on your mask as you recover.
 
 :::coach
 An attack into his *preparation* hits him while he's busy getting ready to do something else. A fencer
-who steps forward to steal distance gives you that moment every single time.
+who steps forward to steal [[distance]] gives you that moment every single time.
 :::
 
 - [Period three](#h-p3)
@@ -315,13 +315,13 @@ You keep backing off, waiting for something better. It doesn't come. You feel th
 under your back foot, then Henrik takes one more step, you take one more back, and both your heels are over
 the end line.
 
-The referee halts and gives him the touch. Then he stop-hits you twice on the restarts for good measure.
+The referee halts and gives him the touch. Then he [[stop-hits]] you twice on the restarts for good measure.
 
 :::rule
 Cross the rear limit of the piste with both feet and your opponent scores a touch.
 :::
 
-@learn Don't retreat blindly against Henrik. He'll walk you off the end of the piste for a free touch.
+@learn Don't [[retreat]] blindly against Henrik. He'll walk you off the end of the piste for a free touch.
 
 - [Period three](#h-p3)
 
@@ -341,7 +341,7 @@ before he masks up.
 @points you 5 Parry-ripostes
 @position Period 3 · his warning zone
 
-You walk him back again. His heel reaches the warning zone and you *feel* it coming: the long lunge,
+You walk him back again. His heel reaches the warning zone and you *feel* it coming: the long [[lunge]],
 arm fully extended, everything committed. You're ready this time. You parry, sweeping his blade out of
 line with yours, and riposte straight to his chest while he's still stretched out on the lunge.
 
@@ -354,7 +354,7 @@ He comes back to the centre, and you walk him down again. Again he lunges, again
 @points them 2 Doubles
 @position Period 3 · middle distance
 
-You counterattack every time he moves, and both lamps light again and again. The numbers climb together.
+You [[counterattack]] every time he moves, and both lamps light again and again. The numbers climb together.
 
 - [The final minute](#h-last)
 
@@ -364,7 +364,7 @@ You counterattack every time he moves, and both lamps light again and again. The
 @position Period 3 · middle distance
 
 You attack and attack. Two get through. The rest run onto his point, one after another, like you're
-fencing the same stop-hit on a loop.
+fencing the same [[stop-hit]] on a loop.
 
 @learn All-out attacking against Henrik just feeds his stop-hit. He needs you to come forward.
 
@@ -394,8 +394,8 @@ One minute left. Maître Colette is on her feet at the end of the piste, which s
 @points them 2 A long lunge that got through
 @position Period 3 · final minute
 
-You hold your distance and let him decide. If he's behind, he has to come to you; the passivity rule
-won't let him wait. He comes twice, long desperate lunges, and both get through.
+You hold your [[distance]] and let him decide. If he's behind, he has to come to you; the passivity rule
+won't let him wait. He comes twice, long desperate [[lunges]], and both get through.
 
 - [The buzzer](#h-time)
 

@@ -1,6 +1,7 @@
 // Small, dependency-free markdown renderer covering what adventure packs need:
 // paragraphs, ### headings, **bold**, *italic*, `code`, lists, > quotes, ---,
-// and ":::kind Optional title" callout blocks. All author text is HTML-escaped.
+// ":::kind Optional title" callout blocks and [[technique]] links. All author
+// text is HTML-escaped.
 
 const CALLOUT_TITLES = {
   coach: "Coach's corner",
@@ -18,8 +19,13 @@ export function escapeHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
+// [[ref]] / [[ref|text]] become buttons; app.js looks the ref up in the pack's
+// technique library when one is clicked (the ref is already escaped).
+const techButton = (_, ref, text) => `<button type="button" class="tech" data-tech="${ref}">${text || ref}</button>`;
+
 export function inline(s) {
   return escapeHtml(s)
+    .replace(/\[\[([^\]|]+?)(?:\|([^\]]+?))?\]\]/g, techButton)
     .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/(^|[^*])\*(?!\s)(.+?)\*(?!\*)/g, '$1<em>$2</em>')

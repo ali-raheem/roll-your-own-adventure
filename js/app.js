@@ -6,9 +6,10 @@
 //   #/pack/<id>/match/<n>       opponent profile + scouting report
 //   #/pack/<id>/play            the match in progress
 //   #/pack/<id>/book            printable gamebook edition
+//   #/pack/<id>/techniques      technique library (links to videos and study pages)
 
 import { renderMarkdown, escapeHtml, inline } from './markdown.js';
-import { endingsOf } from './parser.js';
+import { endingsOf, findTechnique } from './parser.js';
 import { endingHeadline, enterSection, startMatch, visibleChoices } from './engine.js';
 import { resolveSport } from './sports/index.js';
 import { scoreLine } from './sports/common.js';
@@ -21,6 +22,7 @@ import { renderBook } from './book.js';
 const $app = document.getElementById('app');
 let packEntries = [];
 let installPrompt = null;
+let currentPack = null;   // the pack on screen, for [[technique]] buttons
 
 // ---- helpers ---------------------------------------------------------------
 
@@ -98,15 +100,18 @@ async function route() {
   document.body.classList.remove('book-mode');
   const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   try {
+    currentPack = null;
     if (parts[0] !== 'pack') {
       await useSport(resolveSport({}));
       return renderHome();
     }
     const pack = await getPack(decodeURIComponent(parts[1]));
+    currentPack = pack;
     await useSport(pack.sport);
     if (parts[2] === 'match') return renderIntro(pack, Number(parts[3]) || 0);
     if (parts[2] === 'play') return renderPlay(pack);
     if (parts[2] === 'book') return renderBookRoute(pack);
+    if (parts[2] === 'techniques') return renderTechniques(pack);
     return renderBracket(pack);
   } catch (e) {
     showError(e);
@@ -255,6 +260,7 @@ function renderBracket(pack) {
     <section class="panel paper intro-text">${renderMarkdown(pack.intro)}</section>
     ${scoutingReportHtml(pack, prog)}
     <section class="row center">
+      ${pack.techniques.list.length ? `<a class="btn" href="#/pack/${encodeURIComponent(pack.id)}/techniques">🎥 Technique library</a>` : ''}
       <a class="btn" href="#/pack/${encodeURIComponent(pack.id)}/book">📖 Book edition / print</a>
       <button class="btn btn-ghost" id="reset">Reset all progress</button>
     </section>`;
@@ -509,6 +515,46 @@ function renderBookRoute(pack) {
     </div>${renderBook(pack, beltHtml)}`;
   $app.querySelector('#print').addEventListener('click', () => window.print());
 }
+
+// ---- technique library -----------------------------------------------------
+
+function techniqueHtml(t) {
+  return `
+    <h3>${h(t.title)}</h3>
+    ${t.aliases.length ? `<p class="tech-aka muted">Also: ${h(t.aliases.join(' · '))}</p>` : ''}
+    ${renderMarkdown(t.description)}
+    <p class="tech-links">${t.links.map((l, i) =>
+      `<a class="btn btn-small${i ? '' : ' btn-primary'}" href="${h(l.url)}" target="_blank" rel="noopener">${inline(l.label)} ↗</a>`).join('')}</p>`;
+}
+
+function renderTechniques(pack) {
+  setTitle(`${pack.meta.title}: techniques`);
+  const lib = pack.techniques;
+  const list = lib.list.slice().sort((a, b) => a.title.localeCompare(b.title));
+  $app.innerHTML = `
+    <nav class="crumbs"><a href="#/pack/${encodeURIComponent(pack.id)}">← ${h(pack.meta.title)}</a></nav>
+    <section class="pack-head"><h1>Technique library</h1></section>
+    ${lib.intro ? `<section class="panel paper intro-text">${renderMarkdown(lib.intro)}</section>` : ''}
+    <section class="tech-list">${list.map((t) => `<article class="panel paper tech-entry" id="tech-${h(t.id)}">${techniqueHtml(t)}</article>`).join('')}</section>`;
+}
+
+// [[technique]] buttons anywhere in a pack's text open that technique's links.
+document.addEventListener('click', (ev) => {
+  const btn = ev.target.closest('button.tech');
+  if (!btn || !currentPack) return;
+  const t = findTechnique(currentPack, btn.dataset.tech);
+  if (!t) return;
+  let dlg = document.getElementById('tech-dlg');
+  if (!dlg) {
+    dlg = document.createElement('dialog');
+    dlg.id = 'tech-dlg';
+    dlg.className = 'paper';
+    document.body.append(dlg);
+  }
+  dlg.innerHTML = `<section class="tech-entry">${techniqueHtml(t)}</section>
+    <form method="dialog"><button class="btn">Close</button></form>`;
+  dlg.showModal();
+});
 
 // ---- keyboard: 1–9 picks a choice -----------------------------------------
 

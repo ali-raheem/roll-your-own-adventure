@@ -568,6 +568,34 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
 dialog .notebook { margin: 0; border-radius: 0; }
 dialog form { padding: 0 20px; text-align: right; }
 
+/* ---- technique links ---- */
+
+.tech {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline dotted var(--red);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.tech::after { content: "▸"; font-size: 0.75em; margin-left: 2px; color: var(--red); }
+.tech:hover { text-decoration-style: solid; }
+.tech:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 2px; }
+.tech-entry { padding: 4px 20px 8px; }
+.tech-entry h3 { margin: 12px 0 4px; text-transform: uppercase; }
+.tech-aka { margin: 0 0 8px; font-size: 0.85rem; }
+.tech-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.tech-list { display: grid; gap: 12px; }
+.tech-list .tech-entry { margin: 0; }
+.book-tech { break-inside: avoid; margin-bottom: 10px; }
+.book-tech h3 { margin: 8px 0 2px; font-size: 1rem; }
+.book-tech .book-aka { font: italic 0.85rem var(--serif); text-transform: none; color: var(--ink-soft); }
+.book-tech a { color: var(--ink); }
+.book-tech ul { margin: 2px 0; padding-left: 18px; font-size: 0.85em; word-break: break-all; }
+
 /* ---- podium ---- */
 
 .podium { text-align: center; padding: 40px 0; }
@@ -678,6 +706,8 @@ dialog form { padding: 0 20px; text-align: right; }
   .book-fx, .book-choices .turn, .sec-meta { font-size: 0.85em; }
   .belt, .medal, .book-end, .codeword, .callout { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   a { color: #000; }
+  .tech { text-decoration-color: #000; }
+  .tech::after { content: none; }
 }
 
 /* ---- scoreboard extras ---- */

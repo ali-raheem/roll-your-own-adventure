@@ -4,6 +4,7 @@
 // Pack layout:
 //   packs/<id>/pack.md      front matter (title, matches: [...files]) + intro markdown
 //   packs/<id>/<match>.md   front matter (opponent profile) + "## Title {#id}" sections
+//   packs/<id>/techniques.md  optional technique library ("techniques:" in pack.md)
 //
 // See docs/WRITING_PACKS.md for the authoring format. The parser knows nothing
 // about any particular sport: score directives become generic effects whose
@@ -14,6 +15,9 @@ import { resolveSport } from './sports/index.js';
 const SECTION_RE = /^##\s+(.*?)\s*\{#([A-Za-z0-9_-]+)\}\s*$/;
 const CHOICE_RE = /^[-*]\s+\[(.+?)\]\(#([A-Za-z0-9_-]+)\)\s*(?:\{if\s+(!?)([A-Za-z0-9_-]+)\})?\s*$/;
 const DIRECTIVE_RE = /^@([a-z]+)\b\s*(.*)$/;
+const LINK_RE = /^[-*]\s+\[(.+?)\]\((https?:\/\/[^)\s]+)\)\s*$/;
+// [[ref]] or [[ref|shown text]] links to an entry in the pack's technique library.
+export const TECH_REF_RE = /\[\[([^\]|]+?)(?:\|([^\]]+?))?\]\]/g;
 
 export const WHO = ['you', 'them'];
 
@@ -98,10 +102,12 @@ function parseDirective(name, arg, section, errors, where) {
       break;
     }
     case 'position':
+      if (arg.includes('[[')) errors.push(`${where}: technique links ([[...]]) don't work in @${name}`);
       section.position = arg.trim();
       break;
     case 'win':
     case 'lose':
+      if (arg.includes('[[')) errors.push(`${where}: technique links ([[...]]) don't work in @${name}`);
       section.ending = { type: name, text: arg.trim() };
       break;
     case 'decision':
@@ -152,8 +158,9 @@ export function parseMatch(text, file = 'match.md') {
       if (d) return parseDirective(d[1], d[2], cur, errors, where);
       const c = line.match(CHOICE_RE);
       if (c) {
+        // Choices are buttons, so a technique link in a label shows as plain text.
         cur.choices.push({
-          label: c[1],
+          label: c[1].replace(TECH_REF_RE, (_, ref, text) => text || ref),
           target: c[2],
           cond: c[4] ? { key: c[4].toUpperCase(), negate: c[3] === '!' } : null,
         });
@@ -179,6 +186,105 @@ export function parseMatch(text, file = 'match.md') {
     sections,
     errors,
   };
+}
+
+/** Every file a pack folder needs besides pack.md: its matches, then its technique library. */
+export function packFiles(meta) {
+  return [...(Array.isArray(meta.matches) ? meta.matches : []), ...(meta.techniques ? [meta.techniques] : [])];
+}
+
+/** Technique ids and lookups ignore case, accents and punctuation: "Seoi nage" finds seoi-nage. */
+export function techniqueKey(s) {
+  return String(s).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Parse a technique library: "## Name {#id}" entries, each with optional
+ * "@also alias, alias" lines, a markdown description and "- [Label](https://...)"
+ * links (the first is the main one). Text before the first entry is the intro.
+ */
+export function parseTechniques(text, file = 'techniques.md') {
+  const errors = [];
+  const list = [];
+  const preamble = [];
+  let cur = null;
+  text.replace(/\r\n?/g, '\n').split('\n').forEach((line, i) => {
+    const where = `${file}:${i + 1}`;
+    const head = line.match(SECTION_RE);
+    if (head) {
+      cur = { id: techniqueKey(head[2]), title: head[1], aliases: [], links: [], lines: [], where };
+      list.push(cur);
+      return;
+    }
+    if (!cur) return preamble.push(line);
+    const also = line.match(/^@also\s+(.*)$/);
+    if (also) {
+      // Names that only repeat the id or title add nothing to look up or show.
+      const same = new Set([cur.id, techniqueKey(cur.title), ...cur.aliases.map(techniqueKey)]);
+      for (const a of also[1].split(',').map((x) => x.trim()).filter(Boolean)) {
+        if (!same.has(techniqueKey(a))) { same.add(techniqueKey(a)); cur.aliases.push(a); }
+      }
+      return;
+    }
+    if (DIRECTIVE_RE.test(line)) return errors.push(`${where}: only @also works in a technique entry`);
+    const link = line.match(LINK_RE);
+    if (link) return cur.links.push({ label: link[1], url: link[2] });
+    cur.lines.push(line);
+  });
+  for (const t of list) {
+    t.description = t.lines.join('\n').trim();
+    delete t.lines;
+    if (!t.links.length) errors.push(`${t.where}: technique "${t.id}" has no links`);
+  }
+  return { intro: preamble.join('\n').trim(), list, errors };
+}
+
+/** Find a technique by id, title or alias; null if the pack has none by that name. */
+export function findTechnique(pack, ref) {
+  const id = pack.techniques.index.get(techniqueKey(ref));
+  return id ? pack.techniques.byId.get(id) : null;
+}
+
+function buildTechniques(meta, texts, errors) {
+  const lib = { intro: '', list: [], byId: new Map(), index: new Map() };
+  if (!meta.techniques) return lib;
+  const text = texts[meta.techniques];
+  if (text == null) {
+    errors.push(`pack.md: technique file "${meta.techniques}" could not be loaded`);
+    return lib;
+  }
+  const parsed = parseTechniques(text, meta.techniques);
+  errors.push(...parsed.errors);
+  lib.intro = parsed.intro;
+  lib.list = parsed.list;
+  for (const t of parsed.list) {
+    if (lib.byId.has(t.id)) errors.push(`${t.where}: duplicate technique "${t.id}"`);
+    lib.byId.set(t.id, t);
+  }
+  for (const t of parsed.list) {
+    for (const name of [t.id, t.title, ...t.aliases]) {
+      const k = techniqueKey(name);
+      const prev = lib.index.get(k);
+      if (prev && prev !== t.id) errors.push(`${t.where}: "${name}" already names technique "${prev}"`);
+      else lib.index.set(k, t.id);
+    }
+  }
+  return lib;
+}
+
+/** Every [[ref]] in the pack's text must name a technique in its library. */
+function checkTechniqueRefs(pack, sources, errors) {
+  for (const [file, text] of sources) {
+    text.split('\n').forEach((line, i) => {
+      for (const [, ref] of line.matchAll(TECH_REF_RE)) {
+        if (!findTechnique(pack, ref)) {
+          errors.push(`${file}:${i + 1}: technique "${ref}" is not in the technique library` +
+            (pack.meta.techniques ? '' : ' (pack.md has no "techniques:" file)'));
+        }
+      }
+    });
+  }
 }
 
 /**
@@ -220,7 +326,10 @@ export function buildPack(id, packText, matchTexts) {
     }
   }
 
-  return { id, meta, sport, intro: body.trim(), matches, sections, errors };
+  const pack = { id, meta, sport, intro: body.trim(), matches, sections, errors };
+  pack.techniques = buildTechniques(meta, matchTexts, errors);
+  checkTechniqueRefs(pack, [['pack.md', packText], ...files.filter((f) => matchTexts[f] != null).map((f) => [f, matchTexts[f]])], errors);
+  return pack;
 }
 
 /** Structural checks shared by the validator and the in-app debug view. */

@@ -7,6 +7,7 @@ version: 1.0
 event: Capital Épée Open · Senior Men · Direct elimination
 player: You
 sport: fencing
+techniques: techniques.md
 tie_text: Level at time. The priority minute ends without a touch, and the coin toss gave priority to your opponent.
 gold: They hand you the medal and a small bronze trophy shaped like a fencer mid-lunge, which you will keep on your desk for the rest of your life. You beat a giant by taking his blade, a hornet by stepping back, and a professor by refusing to answer his questions. Maître Colette says "Not bad", which from her is a parade.
 matches:
@@ -41,7 +42,7 @@ years and communicates mainly through eyebrows.
   wins, and if nobody scores, the fencer with priority wins.
 - A **yellow card** is a warning. A **red card** gives your opponent a touch. A **black card** is exclusion
   from the tournament. Refusing to salute is a black card.
-- Retreat with both feet over the end of the piste and your opponent scores a touch.
+- [[Retreat]] with both feet over the end of the piste and your opponent scores a touch.
 - A minute of fencing with nobody really trying earns a **P-card** for passivity, given to whoever is
   behind (both fencers if level). Enough of them become penalty touches.
 
