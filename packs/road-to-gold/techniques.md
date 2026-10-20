@@ -3,7 +3,7 @@ Many jiu-jitsu techniques are judo techniques under another name. Those link to 
 [Kodokan's official waza series](https://www.youtube.com/watch?v=_GxcFx8LZRk&list=PLtz539PTepc16H2iu5F3Q3D7_He1EYlIQ).
 Techniques that only exist in jiu-jitsu link to lessons on
 [Bernardo Faria's channel](https://www.youtube.com/@BernardoFariaBJJ), from Bernardo himself and the
-world-class guests he films.
+world-class guests he films, or to the best lesson elsewhere when his channel doesn't cover one.
 
 ## Seoi nage {#seoi-nage}
 @also shoulder throw
@@ -288,3 +288,22 @@ of the forearm under the Achilles tendon.
 
 - [The straight foot lock · Luiz Panza](https://youtu.be/Y5DrRj2GYcQ)
 - [Straight foot lock escape · Gordon Ryan](https://youtu.be/lQ7EW_dPykM)
+
+## Electric chair {#electric-chair}
+@also electric chair sweep
+
+Eddie Bravo's sweep from the lockdown. The bottom player whips up on the underhook, grabs your free
+leg and, with your other leg still locked, stretches you apart until you tip over. Many no-gi players
+keep stretching for a hip submission instead of taking the sweep.
+
+- [The electric chair sweep · Eddie Bravo](https://youtu.be/CXBQ-_z8dsE)
+- [Electric chair from the lockdown · Brandon McCaghren](https://youtu.be/3f2Qkpb98WI)
+
+## Granby roll {#granby-roll}
+@also granby rolls, shoulder roll
+
+A wrestler's escape: from turtle, tuck the head and roll across the shoulders to bring your legs back
+in front of the opponent and recover guard.
+
+- [Guard recovery with the shoulder roll · Brian Glick](https://youtu.be/cNu05sTvQDE)
+- [The granby roll in five steps · Grappling Smarty](https://youtu.be/exkwjkM0P7U)

@@ -133,7 +133,7 @@ and all your weight is leaning away from his underhook.
 
 He *whips up*: comes up on his elbow, underhook driving into your armpit, and grabs your far leg with his
 free hand. With your trapped leg still locked, he stretches you apart like a wishbone. It's the
-**electric chair**. You tip over onto your back and he comes up on top of you.
+**[[electric chair]]**. You tip over onto your back and he comes up on top of you.
 
 @points them 2 Sweep
 @learn Reach back to deal with Jax's [[lockdown]] feet and you give him the whip-up and the electric chair sweep. Deal with the underhook first.
@@ -334,7 +334,7 @@ own lapel. You hold it.
 @position Lockdown half guard · top
 
 You catch his near wrist and lock a figure four. But he's made of pipe cleaners: he rolls toward you
-and under, granby-rolling out of the angle, and when he comes out your arm is empty and he's back on his
+and under, [[granby roll|granby-rolling]] out of the angle, and when he comes out your arm is empty and he's back on his
 side with his underhook.
 
 @learn Jax is too flexible for a [[kimura]] from [[half guard]]; he rolls out of the angle. Keep him flat.

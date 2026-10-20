@@ -59,7 +59,8 @@ All asset paths are relative so the app works under any subpath (it is served fr
   technique library (`techniques: techniques.md` in `pack.md`; `## Title {#id}`, `@also` aliases,
   `- [Label](https://...)` links). Unknown names fail validation. Link sources: judo-derived techniques
   use judo.acmiyaguchi.me/waza/<slug> plus its Kodokan YouTube video (the site's own `youtube_link`);
-  jiu-jitsu-only techniques use Bernardo Faria's channel (@BernardoFariaBJJ, including his guests);
+  jiu-jitsu-only techniques use Bernardo Faria's channel (@BernardoFariaBJJ, including his guests),
+  or a dedicated lesson from a reputable instructor when he has none;
   fencing uses Coach Tyler's Fencer's Edge (@FencersEdge). Check each video's channel and title with
   `https://www.youtube.com/oembed?format=json&url=<video url>` before adding it. `@score you|them <counter> N reason`
   targets any sport counter by id or alias; `@points`/`@advantage`/`@penalty` are shorthands by role.

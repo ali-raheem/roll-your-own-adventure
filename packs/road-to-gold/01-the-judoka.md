@@ -114,7 +114,7 @@ facing him on your back, feet up, and you grab his left sleeve before he can get
 He stands up, a little surprised, and starts fighting your legs.
 
 :::coach
-Granby rolls are the core guard-recovery movement from [[turtle]]. You traded a terrible position for an
+[[Granby rolls]] are the core guard-recovery movement from [[turtle]]. You traded a terrible position for an
 ordinary one. Take it.
 :::
 
